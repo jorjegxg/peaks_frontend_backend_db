@@ -9,7 +9,8 @@ const app = express();
 const allowedOrigins = [
   "https://peak-nu-nine.vercel.app",
   "http://localhost:3000",
-  "https://peak-4h65hm9x7-gxgs-projects-19966461.vercel.app",
+  "https://cupoane.space",
+  "https://www.cupoane.space",
 ];
 app.use(
   cors({
