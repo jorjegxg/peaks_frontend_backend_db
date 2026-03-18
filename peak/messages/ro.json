@@ -1,5 +1,6 @@
 {
   "nav": {
+    "home": "Acasă",
     "games": "Jocuri și setup",
     "prices": "Prețuri",
     "about": "Despre",
@@ -192,6 +193,76 @@
     }
   },
   "footer": {
-    "rights": "Toate drepturile rezervate."
+    "rights": "Toate drepturile rezervate.",
+    "privacyPolicy": "Politica de confidențialitate",
+    "termsOfService": "Termeni și condiții"
+  },
+  "privacy": {
+    "title": "Politica de confidențialitate",
+    "lastUpdated": "Ultima actualizare: Martie 2026",
+    "sections": [
+      {
+        "heading": "1. Informațiile pe care le colectăm",
+        "body": "Când creezi un cont, colectăm adresa de email și numele de afișare din contul Google, precum și numărul de telefon (pentru verificare). Când faci o rezervare, stocăm numele tău, stația aleasă, data, ora și durata."
+      },
+      {
+        "heading": "2. Cum utilizăm informațiile tale",
+        "body": "Folosim informațiile tale pentru a gestiona rezervările, a-ți verifica identitatea prin telefon și a comunica cu tine despre rezervări. Nu vindem și nu partajăm datele tale personale cu terți în scopuri de marketing."
+      },
+      {
+        "heading": "3. Autentificare și securitate",
+        "body": "Folosim Google Sign-In (prin Firebase Authentication) și verificare prin SMS. Parola ta nu este stocată de noi — autentificarea este gestionată securizat de Google și Firebase. Token-urile de sesiune sunt stocate în memoria locală a browser-ului."
+      },
+      {
+        "heading": "4. Stocarea datelor",
+        "body": "Datele tale sunt stocate în baza noastră de date pe servere securizate. Păstrăm informațiile contului cât timp acesta este activ. Poți solicita ștergerea datelor contactându-ne."
+      },
+      {
+        "heading": "5. Cookie-uri și stocare locală",
+        "body": "Folosim stocarea locală pentru a te menține conectat între vizite. Nu folosim cookie-uri de urmărire sau analytics de la terți."
+      },
+      {
+        "heading": "6. Drepturile tale",
+        "body": "Ai dreptul de a accesa, corecta sau șterge datele tale personale. Pentru a exercita aceste drepturi, contactează-ne la adresa de pe pagina de Contact."
+      },
+      {
+        "heading": "7. Modificări ale acestei politici",
+        "body": "Putem actualiza această Politică de confidențialitate din când în când. Orice modificare va fi publicată pe această pagină cu o dată actualizată."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Termeni și condiții",
+    "lastUpdated": "Ultima actualizare: Martie 2026",
+    "sections": [
+      {
+        "heading": "1. Acceptarea termenilor",
+        "body": "Prin utilizarea site-ului și sistemului de rezervări Peak Gaming, ești de acord cu acești Termeni și condiții. Dacă nu ești de acord, te rugăm să nu utilizezi serviciile noastre."
+      },
+      {
+        "heading": "2. Cont și rezervări",
+        "body": "Trebuie să te conectezi cu un cont Google și să-ți verifici numărul de telefon pentru a face rezervări. Ești responsabil pentru acuratețea informațiilor furnizate. Rezervările sunt supuse disponibilității."
+      },
+      {
+        "heading": "3. Anulare și neprezentare",
+        "body": "Poți anula o rezervare oricând înainte de ora programată. Neprezentările repetate pot duce la restricții temporare ale capacității de a face rezervări."
+      },
+      {
+        "heading": "4. Conduita",
+        "body": "Te angajezi să utilizezi facilitățile noastre cu respect. Orice deteriorare a echipamentelor, comportament perturbator sau încălcare a legilor locale poate duce la îndepărtarea din spațiu și suspendarea contului."
+      },
+      {
+        "heading": "5. Prețuri și plată",
+        "body": "Prețurile sunt afișate pe pagina de Prețuri și se pot modifica fără notificare. Plata se face la fața locului. Rezervările nu necesită plata în avans."
+      },
+      {
+        "heading": "6. Limitarea răspunderii",
+        "body": "Peak Gaming nu este responsabil pentru daune indirecte, incidentale sau consecvente rezultate din utilizarea serviciilor sau site-ului nostru. Nu oferim garanții privind disponibilitatea neîntreruptă a sistemului de rezervări."
+      },
+      {
+        "heading": "7. Modificări ale termenilor",
+        "body": "Ne rezervăm dreptul de a modifica acești Termeni în orice moment. Utilizarea continuă a serviciului după modificări constituie acceptarea Termenilor actualizați."
+      }
+    ]
   }
 }

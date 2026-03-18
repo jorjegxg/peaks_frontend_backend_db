@@ -115,11 +115,26 @@ export function PricesContent({ t, basePath = "" }: Props) {
         </div>
       </section>
 
-      <footer className="relative border-t border-accent/20 px-4 py-4 sm:px-6">
-        <div className="mx-auto max-w-6xl flex flex-col items-center justify-between gap-4 sm:flex-row">
+      <footer className="relative border-t border-accent/20 px-4 py-6 sm:px-6">
+        <div className="mx-auto max-w-6xl flex flex-col items-center gap-4">
           <Link href={basePath || "/"} className="font-semibold text-accent led-text">
             Peak Gaming
           </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/50">
+            <Link
+              href={basePath ? "/en/privacy-policy" : "/politica-de-confidentialitate"}
+              className="transition-colors hover:text-accent"
+            >
+              {t.footer.privacyPolicy}
+            </Link>
+            <span className="text-foreground/20">·</span>
+            <Link
+              href={basePath ? "/en/terms-of-service" : "/termeni-si-conditii"}
+              className="transition-colors hover:text-accent"
+            >
+              {t.footer.termsOfService}
+            </Link>
+          </div>
           <p className="text-sm text-foreground/60">
             © {new Date().getFullYear()} Peak Gaming. {t.footer.rights}
           </p>

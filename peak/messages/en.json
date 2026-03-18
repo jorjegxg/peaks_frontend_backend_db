@@ -1,5 +1,6 @@
 {
   "nav": {
+    "home": "Home",
     "games": "Games and setup",
     "prices": "Prices",
     "about": "About",
@@ -192,6 +193,76 @@
     }
   },
   "footer": {
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: March 2026",
+    "sections": [
+      {
+        "heading": "1. Information We Collect",
+        "body": "When you create an account, we collect your Google account email, display name, and phone number (for verification). When you make a reservation, we store your name, chosen station, date, time, and duration."
+      },
+      {
+        "heading": "2. How We Use Your Information",
+        "body": "We use your information to manage reservations, verify your identity via phone, and communicate with you about your bookings. We do not sell or share your personal data with third parties for marketing purposes."
+      },
+      {
+        "heading": "3. Authentication & Security",
+        "body": "We use Google Sign-In (via Firebase Authentication) and SMS-based phone verification. Your password is never stored by us — authentication is handled securely by Google and Firebase. Session tokens are stored in your browser's local storage."
+      },
+      {
+        "heading": "4. Data Storage",
+        "body": "Your data is stored in our database hosted on secure servers. We retain your account information as long as your account is active. You may request deletion of your data by contacting us."
+      },
+      {
+        "heading": "5. Cookies & Local Storage",
+        "body": "We use local storage to keep you signed in between visits. We do not use tracking cookies or third-party analytics."
+      },
+      {
+        "heading": "6. Your Rights",
+        "body": "You have the right to access, correct, or delete your personal data. To exercise these rights, contact us at the address listed on our Contact page."
+      },
+      {
+        "heading": "7. Changes to This Policy",
+        "body": "We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated date."
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated: March 2026",
+    "sections": [
+      {
+        "heading": "1. Acceptance of Terms",
+        "body": "By using Peak Gaming's website and reservation system, you agree to these Terms of Service. If you do not agree, please do not use our services."
+      },
+      {
+        "heading": "2. Account & Reservations",
+        "body": "You must sign in with a Google account and verify your phone number to make reservations. You are responsible for the accuracy of the information you provide. Reservations are subject to availability."
+      },
+      {
+        "heading": "3. Cancellation & No-Shows",
+        "body": "You may cancel a reservation at any time before the scheduled start time. Repeated no-shows may result in temporary restrictions on your ability to make reservations."
+      },
+      {
+        "heading": "4. Conduct",
+        "body": "You agree to use our facilities respectfully. Any damage to equipment, disruptive behavior, or violation of local laws may result in removal from the premises and account suspension."
+      },
+      {
+        "heading": "5. Pricing & Payment",
+        "body": "Prices are displayed on our Prices page and may change without notice. Payment is made on-site. Reservations do not require advance payment."
+      },
+      {
+        "heading": "6. Limitation of Liability",
+        "body": "Peak Gaming is not liable for any indirect, incidental, or consequential damages arising from the use of our services or website. We make no warranties regarding uninterrupted availability of the reservation system."
+      },
+      {
+        "heading": "7. Changes to Terms",
+        "body": "We reserve the right to modify these Terms at any time. Continued use of the service after changes constitutes acceptance of the updated Terms."
+      }
+    ]
   }
 }
