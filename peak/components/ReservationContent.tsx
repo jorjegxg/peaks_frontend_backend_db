@@ -660,8 +660,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
             {type && (
               <div ref={stationSectionRef}>
                 <label className="block text-sm font-medium text-foreground/90 mb-3">
-                  {type === "ps5" ? t.reservation.selectStation : t.reservation.selectStations} (
-                  {type === "ps5" ? t.reservation.ps5Label : t.reservation.pcLabel})
+                  {t.reservation.selectStations} ({type === "ps5" ? t.reservation.ps5Label : t.reservation.pcLabel})
                 </label>
                 <div className="flex flex-wrap gap-3">
                   {stations.map((num) => {
@@ -669,15 +668,11 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                     const isSelected = selectedStations.includes(num);
                     const toggleStation = () => {
                       if (isReserved) return;
-                      if (type === "ps5") {
-                        setSelectedStations(isSelected ? [] : [num]);
-                      } else {
-                        setSelectedStations((prev) =>
-                          isSelected
-                            ? prev.filter((s) => s !== num)
-                            : [...prev, num].sort((a, b) => a - b)
-                        );
-                      }
+                      setSelectedStations((prev) =>
+                        isSelected
+                          ? prev.filter((s) => s !== num)
+                          : [...prev, num].sort((a, b) => a - b)
+                      );
                     };
                     return (
                       <button
