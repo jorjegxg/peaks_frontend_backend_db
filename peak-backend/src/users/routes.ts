@@ -18,13 +18,13 @@ function getBearerToken(req: Request): string | null {
 router.get("/me", async (req: Request, res: Response) => {
   if (!isAuthConfigured()) {
     return res.status(503).json({
+      errorCode: "AUTH_NOT_CONFIGURED",
       error: "Authentication service is not configured",
-      hint: "Set GOOGLE_CLIENT_ID and JWT_SECRET in .env",
     });
   }
   const token = getBearerToken(req);
   if (!token) {
-    return res.status(401).json({ error: "Authorization required" });
+    return res.status(401).json({ errorCode: "AUTH_REQUIRED", error: "Authorization required" });
   }
   try {
     const { sub, email, name } = verifySessionToken(token);
@@ -32,7 +32,7 @@ router.get("/me", async (req: Request, res: Response) => {
     res.json(profile);
   } catch (err) {
     console.error("[users] GET /me failed:", err);
-    return res.status(401).json({ error: "Invalid or expired token" });
+    return res.status(401).json({ errorCode: "AUTH_INVALID_TOKEN", error: "Invalid or expired token" });
   }
 });
 
@@ -44,35 +44,35 @@ router.get("/me", async (req: Request, res: Response) => {
 router.post("/me/phone", async (req: Request, res: Response) => {
   if (!isAuthConfigured()) {
     return res.status(503).json({
+      errorCode: "AUTH_NOT_CONFIGURED",
       error: "Authentication service is not configured",
-      hint: "Set GOOGLE_CLIENT_ID and JWT_SECRET in .env",
     });
   }
   const token = getBearerToken(req);
   if (!token) {
-    return res.status(401).json({ error: "Authorization required" });
+    return res.status(401).json({ errorCode: "AUTH_REQUIRED", error: "Authorization required" });
   }
   const { phone, code } = req.body as { phone?: string; code?: string };
   const raw = typeof phone === "string" ? phone : "";
   const normalizedPhone = raw.replace(/\s/g, "").trim();
   const e164 = normalizedPhone.startsWith("+") ? normalizedPhone : `+${normalizedPhone}`;
   if (!e164 || e164 === "+") {
-    return res.status(400).json({ error: "Phone number is required" });
+    return res.status(400).json({ errorCode: "PHONE_REQUIRED", error: "Phone number is required" });
   }
   if (!code || typeof code !== "string" || !code.trim()) {
-    return res.status(400).json({ error: "Verification code is required" });
+    return res.status(400).json({ errorCode: "OTP_CODE_REQUIRED", error: "Verification code is required" });
   }
   try {
     const { sub } = verifySessionToken(token);
     const valid = await verifyOtp(e164, code.trim());
     if (!valid) {
-      return res.status(400).json({ error: "Invalid or expired code", verified: false });
+      return res.status(400).json({ errorCode: "OTP_INVALID", error: "Invalid or expired code", verified: false });
     }
     await setUserPhone(sub, e164);
     res.json({ success: true, message: "Phone verified and linked" });
   } catch (err) {
     console.error("[users] POST /me/phone failed:", err);
-    return res.status(401).json({ error: "Invalid or expired token" });
+    return res.status(401).json({ errorCode: "AUTH_INVALID_TOKEN", error: "Invalid or expired token" });
   }
 });
 

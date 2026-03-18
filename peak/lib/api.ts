@@ -15,6 +15,31 @@ function getApiBase(): string {
 }
 export const API_BASE = getApiBase();
 
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.code = code;
+  }
+}
+
+async function parseError(res: Response): Promise<{ message: string; code?: string }> {
+  const body = await res.text();
+  let message = body || `Request failed: ${res.status}`;
+  let code: string | undefined;
+  try {
+    const j = JSON.parse(body);
+    if (typeof j?.errorCode === "string") code = j.errorCode;
+    if (typeof j?.error === "string") message = j.error;
+  } catch {
+    // ignore
+  }
+  return { message, code };
+}
+
 export async function apiFetch<T>(
   path: string,
   options?: RequestInit
@@ -28,15 +53,8 @@ export async function apiFetch<T>(
     },
   });
   if (!res.ok) {
-    const body = await res.text();
-    let message = body;
-    try {
-      const j = JSON.parse(body);
-      if (j?.error) message = j.error;
-    } catch {
-      // use body as message
-    }
-    throw new Error(message || `Request failed: ${res.status}`);
+    const { message, code } = await parseError(res);
+    throw new ApiError(message, res.status, code);
   }
   if (res.status === 204) return undefined as T;
   const contentType = res.headers.get("content-type") || "";
@@ -63,15 +81,8 @@ export async function apiFetchWithAuth<T>(
     },
   });
   if (!res.ok) {
-    const body = await res.text();
-    let message = body;
-    try {
-      const j = JSON.parse(body);
-      if (j?.error) message = j.error;
-    } catch {
-      // use body as message
-    }
-    throw new Error(message || `Request failed: ${res.status}`);
+    const { message, code } = await parseError(res);
+    throw new ApiError(message, res.status, code);
   }
   if (res.status === 204) return undefined as T;
   const contentType = res.headers.get("content-type") || "";

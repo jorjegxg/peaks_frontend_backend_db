@@ -156,7 +156,33 @@
     "phoneFormatHint": "Include prefixul de țară (ex. +40 pentru România).",
     "phoneRequired": "Numărul de telefon este obligatoriu.",
     "signOut": "Deconectare",
-    "signedInAs": "Conectat ca"
+    "signedInAs": "Conectat ca",
+    "errors": {
+      "unknown": "A apărut o eroare. Te rugăm să încerci din nou.",
+      "authNotConfigured": "Conectarea nu este configurată. Te rugăm să ne contactezi.",
+      "authRequired": "Trebuie să fii conectat.",
+      "authInvalid": "Sesiunea a expirat. Conectează-te din nou.",
+      "authInvalidCredential": "Conectarea cu Google a eșuat. Te rugăm să încerci din nou.",
+      "phoneRequired": "Numărul de telefon este obligatoriu.",
+      "phoneInvalid": "Format invalid pentru numărul de telefon.",
+      "smsNotConfigured": "Verificarea prin SMS nu este configurată. Te rugăm să ne contactezi.",
+      "smsSendFailed": "Nu am putut trimite codul. Te rugăm să încerci din nou.",
+      "otpCodeRequired": "Codul de verificare este obligatoriu.",
+      "otpInvalid": "Cod invalid sau expirat.",
+      "emailRequired": "Emailul este obligatoriu pentru rezervare.",
+      "reservationSaveFailed": "Rezervarea a eșuat. Te rugăm să încerci din nou.",
+      "reservationDeleteFailed": "Nu am putut șterge rezervarea. Te rugăm să încerci din nou.",
+      "reservationFetchFailed": "Nu am putut încărca rezervările. Reîmprospătează pagina."
+    },
+    "validation": {
+      "mustBeSignedIn": "Trebuie să fii conectat pentru a face o rezervare.",
+      "chooseType": "Alege mai întâi PS5 sau PC.",
+      "selectStation": "Selectează cel puțin o stație.",
+      "chooseTime": "Alege ora de început.",
+      "advanceBooking": "Rezervările trebuie făcute cu cel puțin {hours} {unit} înainte.",
+      "nameRequired": "Introdu numele.",
+      "nameTooLong": "Numele poate avea cel mult {max} caractere."
+    }
   },
   "footer": {
     "rights": "Toate drepturile rezervate."

@@ -16,14 +16,14 @@ const router = Router();
 router.post("/google", async (req: Request, res: Response) => {
   if (!isAuthConfigured()) {
     return res.status(503).json({
+      errorCode: "AUTH_NOT_CONFIGURED",
       error: "Authentication service is not configured",
-      hint: "Set GOOGLE_CLIENT_ID and JWT_SECRET in .env",
     });
   }
 
   const { credential } = req.body as { credential?: string };
   if (!credential || typeof credential !== "string") {
-    return res.status(400).json({ error: "credential is required" });
+    return res.status(400).json({ errorCode: "AUTH_CREDENTIAL_REQUIRED", error: "credential is required" });
   }
 
   try {
@@ -33,7 +33,7 @@ router.post("/google", async (req: Request, res: Response) => {
     res.json({ token, profile });
   } catch (err) {
     console.error("[auth] POST /api/auth/google failed:", err);
-    return res.status(401).json({ error: "Invalid Google credential" });
+    return res.status(401).json({ errorCode: "AUTH_INVALID_CREDENTIAL", error: "Invalid Google credential" });
   }
 });
 

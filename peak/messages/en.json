@@ -156,7 +156,33 @@
     "phoneFormatHint": "Include country code (e.g. +40 for Romania).",
     "phoneRequired": "Phone number is required.",
     "signOut": "Sign out",
-    "signedInAs": "Signed in as"
+    "signedInAs": "Signed in as",
+    "errors": {
+      "unknown": "Something went wrong. Please try again.",
+      "authNotConfigured": "Sign-in is not configured. Please contact us.",
+      "authRequired": "You must be signed in.",
+      "authInvalid": "Your session expired. Please sign in again.",
+      "authInvalidCredential": "Google sign-in failed. Please try again.",
+      "phoneRequired": "Phone number is required.",
+      "phoneInvalid": "Invalid phone number format.",
+      "smsNotConfigured": "SMS verification is not configured. Please contact us.",
+      "smsSendFailed": "Failed to send verification code. Please try again.",
+      "otpCodeRequired": "Verification code is required.",
+      "otpInvalid": "Invalid or expired code.",
+      "emailRequired": "Email is required to make a reservation.",
+      "reservationSaveFailed": "Reservation failed. Please try again.",
+      "reservationDeleteFailed": "Failed to delete reservation. Please try again.",
+      "reservationFetchFailed": "Failed to load reservations. Please refresh."
+    },
+    "validation": {
+      "mustBeSignedIn": "You must be signed in to make a reservation.",
+      "chooseType": "Choose PS5 or PC first.",
+      "selectStation": "Select at least one station.",
+      "chooseTime": "Choose a starting time.",
+      "advanceBooking": "Reservations must be made at least {hours} {unit} in advance.",
+      "nameRequired": "Enter your name.",
+      "nameTooLong": "Name must be at most {max} characters."
+    }
   },
   "footer": {
     "rights": "All rights reserved."

@@ -45,13 +45,13 @@ router.post("/send", async (req: Request, res: Response) => {
   const normalized = normalizePhone(phone ?? "");
 
   if (!normalized) {
-    return res.status(400).json({ error: "Phone number is required" });
+    return res.status(400).json({ errorCode: "PHONE_REQUIRED", error: "Phone number is required" });
   }
   if (!isValidPhone(normalized)) {
-    return res.status(400).json({ error: "Invalid phone number format" });
+    return res.status(400).json({ errorCode: "PHONE_INVALID_FORMAT", error: "Invalid phone number format" });
   }
   if (!isTwilioConfigured()) {
-    return res.status(503).json({ error: "SMS service is not configured" });
+    return res.status(503).json({ errorCode: "SMS_NOT_CONFIGURED", error: "SMS service is not configured" });
   }
 
   const code = await createOtp(normalized);
@@ -64,6 +64,7 @@ router.post("/send", async (req: Request, res: Response) => {
   } catch (err) {
     console.error("[OTP] Twilio send failed:", err);
     return res.status(502).json({
+      errorCode: "SMS_SEND_FAILED",
       error: "Failed to send verification code",
     });
   }
@@ -84,16 +85,17 @@ router.post("/verify", async (req: Request, res: Response) => {
   const normalized = normalizePhone(phone ?? "");
 
   if (!normalized) {
-    return res.status(400).json({ error: "Phone number is required" });
+    return res.status(400).json({ errorCode: "PHONE_REQUIRED", error: "Phone number is required" });
   }
   if (!code || typeof code !== "string") {
-    return res.status(400).json({ error: "Verification code is required" });
+    return res.status(400).json({ errorCode: "OTP_CODE_REQUIRED", error: "Verification code is required" });
   }
 
   const valid = await verifyOtp(normalized, code.trim());
 
   if (!valid) {
     return res.status(400).json({
+      errorCode: "OTP_INVALID",
       error: "Invalid or expired code",
       verified: false,
     });

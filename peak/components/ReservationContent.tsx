@@ -17,6 +17,7 @@ import {
 } from "@/lib/reservations";
 import { useAuth } from "@/context/AuthContext";
 import { isGoogleAuthConfigured, renderGoogleSignInButton } from "@/lib/google-auth";
+import { ApiError } from "@/lib/api";
 
 const PS5_IMAGE = "/playstation.jpg";
 const PC_IMAGE = "/pc.jpg";
@@ -181,6 +182,48 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     }
   };
 
+  const tError = useCallback(
+    (err: unknown): string => {
+      if (err instanceof ApiError) {
+        switch (err.code) {
+          case "AUTH_NOT_CONFIGURED":
+            return t.reservation.errors.authNotConfigured;
+          case "AUTH_REQUIRED":
+            return t.reservation.errors.authRequired;
+          case "AUTH_INVALID_TOKEN":
+            return t.reservation.errors.authInvalid;
+          case "AUTH_INVALID_CREDENTIAL":
+            return t.reservation.errors.authInvalidCredential;
+          case "PHONE_REQUIRED":
+          case "USER_PHONE_REQUIRED":
+            return t.reservation.errors.phoneRequired;
+          case "PHONE_INVALID_FORMAT":
+            return t.reservation.errors.phoneInvalid;
+          case "SMS_NOT_CONFIGURED":
+            return t.reservation.errors.smsNotConfigured;
+          case "SMS_SEND_FAILED":
+            return t.reservation.errors.smsSendFailed;
+          case "OTP_CODE_REQUIRED":
+            return t.reservation.errors.otpCodeRequired;
+          case "OTP_INVALID":
+            return t.reservation.errors.otpInvalid;
+          case "USER_EMAIL_REQUIRED":
+            return t.reservation.errors.emailRequired;
+          case "RESERVATION_SAVE_FAILED":
+            return t.reservation.errors.reservationSaveFailed;
+          case "RESERVATION_DELETE_FAILED":
+            return t.reservation.errors.reservationDeleteFailed;
+          case "RESERVATION_FETCH_FAILED":
+            return t.reservation.errors.reservationFetchFailed;
+          default:
+            return t.reservation.errors.unknown;
+        }
+      }
+      return t.reservation.errors.unknown;
+    },
+    [t]
+  );
+
   useEffect(() => {
     if (!user) return;
     if (user.displayName && !name) setName(user.displayName);
@@ -195,19 +238,18 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     setPhoneAuthError("");
     const raw = signInPhone.trim();
     if (!raw) {
-      setPhoneAuthError(t.reservation.phoneRequired ?? "Phone number is required.");
+      setPhoneAuthError(t.reservation.errors.phoneRequired);
       return;
     }
     try {
       setIsSendingOtp(true);
       await sendPhoneOtp(toE164(raw));
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to send code.";
-      setPhoneAuthError(message);
+      setPhoneAuthError(tError(err));
     } finally {
       setIsSendingOtp(false);
     }
-  }, [signInPhone, sendPhoneOtp, t.reservation.phoneRequired]);
+  }, [signInPhone, sendPhoneOtp, tError, t.reservation.errors.phoneRequired]);
 
   const handleConfirmOtp = useCallback(async () => {
     setPhoneAuthError("");
@@ -217,12 +259,11 @@ export function ReservationContent({ t, basePath = "" }: Props) {
       await confirmPhoneOtp(otpCode.trim());
       setOtpCode("");
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Invalid code.";
-      setPhoneAuthError(message);
+      setPhoneAuthError(tError(err));
     } finally {
       setIsConfirmingOtp(false);
     }
-  }, [otpCode, confirmPhoneOtp]);
+  }, [otpCode, confirmPhoneOtp, tError]);
 
   const maxStation = type === "ps5" ? 5 : type === "pc" ? 9 : 0;
   const stations = maxStation > 0 ? Array.from({ length: maxStation }, (_, i) => i + 1) : [];
@@ -256,7 +297,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
       try {
         const token = await getToken();
         if (!token) {
-          setDeleteError("You must be signed in to delete a reservation.");
+          setDeleteError(t.reservation.errors.authRequired);
           return;
         }
         setDeletingId(reservation.id);
@@ -264,14 +305,12 @@ export function ReservationContent({ t, basePath = "" }: Props) {
         const next = await getReservationsForDate(reservation.date);
         setReservations(next);
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Failed to delete reservation.";
-        setDeleteError(message);
+        setDeleteError(tError(err));
       } finally {
         setDeletingId(null);
       }
     },
-    [getToken]
+    [getToken, tError, t.reservation.errors.authRequired]
   );
 
   // Auto-hide success notification after a short delay
@@ -285,22 +324,22 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     e.preventDefault();
     setSubmitError("");
     if (!user) {
-      setSubmitError("You must be signed in to make a reservation.");
+      setSubmitError(t.reservation.validation.mustBeSignedIn);
       return;
     }
     if (!type) {
-      setSubmitError("Choose PS5 or PC first.");
+      setSubmitError(t.reservation.validation.chooseType);
       setShowTypeHint(true);
       scrollToRef(typeSectionRef);
       return;
     }
     if (selectedStations.length === 0) {
-      setSubmitError("Select at least one station.");
+      setSubmitError(t.reservation.validation.selectStation);
       scrollToRef(stationSectionRef);
       return;
     }
     if (!time) {
-      setSubmitError("Choose a starting time.");
+      setSubmitError(t.reservation.validation.chooseTime);
       scrollToRef(timeSectionRef);
       return;
     }
@@ -313,24 +352,30 @@ export function ReservationContent({ t, basePath = "" }: Props) {
       const minMs = MIN_ADVANCE_HOURS * 60 * 60 * 1000;
       if (diffMs < minMs) {
         const unit = MIN_ADVANCE_HOURS === 1 ? "hour" : "hours";
-        setSubmitError(`Reservations must be made at least ${MIN_ADVANCE_HOURS} ${unit} in advance.`);
+        setSubmitError(
+          t.reservation.validation.advanceBooking
+            .replace("{hours}", String(MIN_ADVANCE_HOURS))
+            .replace("{unit}", unit)
+        );
         scrollToRef(timeSectionRef);
         return;
       }
     }
     if (!name.trim()) {
-      setSubmitError("Enter your name.");
+      setSubmitError(t.reservation.validation.nameRequired);
       scrollToRef(nameSectionRef);
       return;
     }
     const trimmedName = name.trim();
     if (trimmedName.length > MAX_NAME_LENGTH) {
-      setSubmitError(`Name must be at most ${MAX_NAME_LENGTH} characters.`);
+      setSubmitError(
+        t.reservation.validation.nameTooLong.replace("{max}", String(MAX_NAME_LENGTH))
+      );
       return;
     }
     const token = await getToken();
     if (!token) {
-      setSubmitError("You must be signed in to make a reservation.");
+      setSubmitError(t.reservation.validation.mustBeSignedIn);
       return;
     }
     // reuse reservationDate computed above
@@ -355,9 +400,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
       setSelectedStations([]);
       scrollToRef(reservedSlotsRef);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to save reservation.";
-      const isPhoneRequiredError = /phone.*required|required.*phone/i.test(message);
-      setSubmitError(isPhoneRequiredError ? "Reservation failed. Please try again." : message);
+      setSubmitError(tError(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -609,7 +652,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               </div>
               {showTypeHint && !type && (
                 <p className="mt-2 text-sm text-red-500">
-                  Select PS5 or PC to continue.
+                  {t.reservation.validation.chooseType}
                 </p>
               )}
             </div>
