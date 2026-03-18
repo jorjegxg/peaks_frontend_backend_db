@@ -70,12 +70,9 @@ export function getGoogleClientId(): string {
   return GOOGLE_CLIENT_ID;
 }
 
-/**
- * Renders a Google Sign-In button into the given container element.
- * Calls `onCredential` with the Google ID token when the user signs in.
- */
-export async function renderGoogleSignInButton(
-  container: HTMLElement,
+let initialized = false;
+
+export async function initGoogleIdentityServices(
   onCredential: (credential: string) => void
 ): Promise<void> {
   if (!GOOGLE_CLIENT_ID) {
@@ -85,14 +82,29 @@ export async function renderGoogleSignInButton(
   const google = window.google;
   if (!google) throw new Error("Google Identity Services failed to load");
 
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: (response: { credential: string }) => {
-      if (response.credential) {
-        onCredential(response.credential);
-      }
-    },
-  });
+  if (!initialized) {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: (response: { credential: string }) => {
+        if (response.credential) {
+          onCredential(response.credential);
+        }
+      },
+    });
+    initialized = true;
+  }
+}
+
+/**
+ * Renders a Google Sign-In button into the given container element.
+ * NOTE: Call `initGoogleIdentityServices` first.
+ */
+export async function renderGoogleSignInButton(
+  container: HTMLElement
+): Promise<void> {
+  await loadGsiScript();
+  const google = window.google;
+  if (!google) throw new Error("Google Identity Services failed to load");
 
   google.accounts.id.renderButton(container, {
     theme: "outline",
