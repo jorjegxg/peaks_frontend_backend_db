@@ -125,17 +125,39 @@ function toE164(phone: string, defaultCountryCode = "+40"): string {
   return `+${digits}`;
 }
 
-function GoogleCustomButton({ onClick }: { onClick: () => void }) {
+function Spinner({ className = "" }: { className?: string }) {
+  return (
+    <span
+      className={`inline-block h-4 w-4 animate-spin rounded-full border-2 border-current/30 border-t-current ${className}`}
+    />
+  );
+}
+
+function GoogleLogo() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+      <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.1 24.1 0 0 0 0 21.56l7.98-6.19z"/>
+      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+    </svg>
+  );
+}
+
+function GoogleCustomButton({ onClick, loading }: { onClick: () => void; loading?: boolean }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="inline-flex items-center justify-center gap-3 rounded-xl bg-black px-5 py-3 text-white font-semibold shadow-sm hover:bg-black/90 transition"
+      disabled={loading}
+      className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-3 font-medium text-gray-700 shadow-md ring-1 ring-black/10 transition-all hover:shadow-lg hover:ring-black/20 active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait"
     >
-      <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-white text-black font-bold">
-        G
-      </span>
-      <span>Continue with Google</span>
+      {loading ? (
+        <Spinner className="text-gray-500" />
+      ) : (
+        <GoogleLogo />
+      )}
+      <span className="text-[15px]">Continue with Google</span>
     </button>
   );
 }
@@ -171,6 +193,8 @@ export function ReservationContent({ t, basePath = "" }: Props) {
   const [showTypeHint, setShowTypeHint] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState("");
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [phoneVerified, setPhoneVerified] = useState(false);
 
   const typeSectionRef = useRef<HTMLDivElement | null>(null);
   const timeSectionRef = useRef<HTMLDivElement | null>(null);
@@ -260,6 +284,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
       setIsConfirmingOtp(true);
       await confirmPhoneOtp(otpCode.trim());
       setOtpCode("");
+      setPhoneVerified(true);
     } catch (err: unknown) {
       setPhoneAuthError(tError(err));
     } finally {
@@ -315,12 +340,18 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     [getToken, tError, t.reservation.errors.authRequired]
   );
 
-  // Auto-hide success notification after a short delay
+  // Auto-hide success notifications
   useEffect(() => {
     if (!submitted) return;
     const timer = setTimeout(() => setSubmitted(false), 4000);
     return () => clearTimeout(timer);
   }, [submitted]);
+
+  useEffect(() => {
+    if (!phoneVerified) return;
+    const timer = setTimeout(() => setPhoneVerified(false), 4000);
+    return () => clearTimeout(timer);
+  }, [phoneVerified]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -417,6 +448,13 @@ export function ReservationContent({ t, basePath = "" }: Props) {
           </h1>
           <p className="mt-2 text-foreground/70">{t.reservation.subtitle}</p>
 
+          {authLoading && (
+            <div className="mt-6 flex items-center justify-center gap-3 rounded-xl border border-accent/40 bg-accent/5 p-6">
+              <Spinner className="h-5 w-5 text-accent" />
+              <span className="text-foreground/70">{t.reservation.loadingAccount ?? "Loading your account…"}</span>
+            </div>
+          )}
+
           {!authLoading && user && (
             <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
               <span className="text-foreground/70">
@@ -438,13 +476,17 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               <p className="text-foreground/70 text-sm mb-4">{t.reservation.thenVerifyPhone}</p>
               <div className="inline-flex items-center justify-center">
                 <GoogleCustomButton
+                  loading={isSigningIn}
                   onClick={() => {
                     setPhoneAuthError("");
-                    signInWithGoogle().catch((e) =>
-                      setPhoneAuthError(
-                        e instanceof Error ? e.message : "Sign-in failed",
-                      ),
-                    );
+                    setIsSigningIn(true);
+                    signInWithGoogle()
+                      .catch((e) =>
+                        setPhoneAuthError(
+                          e instanceof Error ? e.message : "Sign-in failed",
+                        ),
+                      )
+                      .finally(() => setIsSigningIn(false));
                   }}
                 />
               </div>
@@ -538,11 +580,20 @@ export function ReservationContent({ t, basePath = "" }: Props) {
           )}
 
           {submitted && (
-            <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-emerald-500/60 bg-emerald-500/90 px-4 py-3 text-emerald-50 font-medium flex items-center gap-2 shadow-lg">
+            <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-emerald-500/60 bg-emerald-500/90 px-4 py-3 text-emerald-50 font-medium flex items-center gap-2 shadow-lg animate-[fadeIn_0.3s_ease-out]">
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-black text-xs">
                 ✓
               </span>
               <span>{t.reservation.successMessage}</span>
+            </div>
+          )}
+
+          {phoneVerified && (
+            <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-emerald-500/60 bg-emerald-500/90 px-4 py-3 text-emerald-50 font-medium flex items-center gap-2 shadow-lg animate-[fadeIn_0.3s_ease-out]">
+              <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-black text-xs">
+                ✓
+              </span>
+              <span>{t.reservation.phoneVerified ?? "Phone verified — your account is ready!"}</span>
             </div>
           )}
 
