@@ -69,20 +69,10 @@ body {
   pointer-events: none;
 }
 
-/* Google Identity Services (GSI) button can inject wrappers with padding/bg,
-   which may appear after load (especially in production). Force consistent sizing. */
+/* Google Identity Services (GSI)
+   Google sometimes injects a wrapper with extra padding after load (esp. in production).
+   Remove ONLY the wrapper padding; don't override Google's internal button styling. */
 .haAclf,
 .g_id_signin {
   padding: 0 !important;
-  background: transparent !important;
-}
-
-/* Common GSI internal button containers */
-.nsm7Bb-HzV7m-LgbsSe,
-.nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb {
-  padding: 0 !important;
-  margin: 0 !important;
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
 }
