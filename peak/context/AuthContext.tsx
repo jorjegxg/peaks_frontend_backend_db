@@ -9,23 +9,15 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import {
-  onAuthStateChanged,
-  signInWithRedirect,
-  getRedirectResult,
-  signOut as firebaseSignOut,
-  GoogleAuthProvider,
-  type User as FirebaseUser,
-} from "firebase/auth";
-import { getFirebaseAuth, isFirebaseConfigured } from "@/lib/firebase";
 import { apiFetch, apiFetchWithAuth } from "@/lib/api";
+
+const SESSION_TOKEN_KEY = "peak_session_token";
 
 export type User = {
   uid: string;
   email?: string | null;
   displayName?: string | null;
   phoneNumber?: string | null;
-  /** True when user signed in with Google but has not yet verified phone (first-time account). */
   needsPhoneVerification: boolean;
 };
 
@@ -34,7 +26,7 @@ type AuthContextValue = {
   loading: boolean;
   phoneOtpSent: boolean;
   getToken: () => Promise<string | null>;
-  signInWithGoogle: () => Promise<void>;
+  handleGoogleCredential: (credential: string) => Promise<void>;
   sendPhoneOtp: (phoneNumber: string) => Promise<void>;
   confirmPhoneOtp: (code: string) => Promise<void>;
   resetPhoneOtp: () => void;
@@ -43,18 +35,28 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-async function fetchUserProfile(token: string): Promise<{
+type UserProfile = {
   hasPhone: boolean;
   phone: string | null;
   email: string | null;
   displayName: string | null;
-}> {
-  return apiFetchWithAuth<{
-    hasPhone: boolean;
-    phone: string | null;
-    email: string | null;
-    displayName: string | null;
-  }>("/api/users/me", token);
+};
+
+async function fetchUserProfile(token: string): Promise<UserProfile> {
+  return apiFetchWithAuth<UserProfile>("/api/users/me", token);
+}
+
+function getStoredToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem(SESSION_TOKEN_KEY);
+}
+
+function setStoredToken(token: string): void {
+  localStorage.setItem(SESSION_TOKEN_KEY, token);
+}
+
+function clearStoredToken(): void {
+  localStorage.removeItem(SESSION_TOKEN_KEY);
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -63,80 +65,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [phoneOtpSent, setPhoneOtpSent] = useState(false);
   const phoneForOtpRef = useRef<string | null>(null);
 
-  const syncUser = useCallback(async (firebaseUser: FirebaseUser | null) => {
-    if (!firebaseUser) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-    if (!isFirebaseConfigured()) {
-      setUser({
-        uid: firebaseUser.uid,
-        email: firebaseUser.email ?? null,
-        displayName: firebaseUser.displayName ?? null,
-        phoneNumber: null,
-        needsPhoneVerification: false,
-      });
-      setLoading(false);
-      return;
-    }
+  const loadUserFromToken = useCallback(async (token: string) => {
     try {
-      const token = await firebaseUser.getIdToken();
       const profile = await fetchUserProfile(token);
       setUser({
-        uid: firebaseUser.uid,
-        email: profile.email ?? firebaseUser.email ?? null,
-        displayName: profile.displayName ?? firebaseUser.displayName ?? null,
+        uid: token,
+        email: profile.email,
+        displayName: profile.displayName,
         phoneNumber: profile.phone,
         needsPhoneVerification: !profile.hasPhone,
       });
-    } catch (err) {
-      console.error("[Auth] Failed to fetch user profile:", err);
-      setUser({
-        uid: firebaseUser.uid,
-        email: firebaseUser.email ?? null,
-        displayName: firebaseUser.displayName ?? null,
-        phoneNumber: null,
-        needsPhoneVerification: true,
-      });
-    } finally {
-      setLoading(false);
+    } catch {
+      clearStoredToken();
+      setUser(null);
     }
   }, []);
 
   useEffect(() => {
-    const auth = getFirebaseAuth();
-    if (!auth) {
+    const token = getStoredToken();
+    if (token) {
+      loadUserFromToken(token).finally(() => setLoading(false));
+    } else {
       setLoading(false);
-      return;
     }
-    let mounted = true;
-    getRedirectResult(auth)
-      .then(() => {
-        if (!mounted) return;
-        // User may have just returned from Google redirect; onAuthStateChanged will run
-      })
-      .catch((err) => {
-        if (mounted) console.error("[Auth] Redirect result error:", err);
-      });
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (mounted) {
-        setLoading(true);
-        syncUser(firebaseUser);
-      }
-    });
-    return () => {
-      mounted = false;
-      unsubscribe();
-    };
-  }, [syncUser]);
+  }, [loadUserFromToken]);
 
-  const signInWithGoogle = useCallback(async () => {
-    const auth = getFirebaseAuth();
-    if (!auth) throw new Error("Firebase is not configured");
-    const provider = new GoogleAuthProvider();
-    await signInWithRedirect(auth, provider);
-    // User is navigated away to Google; will return to this site and getRedirectResult will run
+  const handleGoogleCredential = useCallback(async (credential: string) => {
+    setLoading(true);
+    try {
+      const result = await apiFetch<{ token: string; profile: UserProfile }>(
+        "/api/auth/google",
+        {
+          method: "POST",
+          body: JSON.stringify({ credential }),
+        }
+      );
+      setStoredToken(result.token);
+      setUser({
+        uid: result.token,
+        email: result.profile.email,
+        displayName: result.profile.displayName,
+        phoneNumber: result.profile.phone,
+        needsPhoneVerification: !result.profile.hasPhone,
+      });
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const sendPhoneOtp = useCallback(async (phoneNumber: string) => {
@@ -155,24 +129,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const confirmPhoneOtp = useCallback(async (code: string) => {
-    const phone = phoneForOtpRef.current;
-    const auth = getFirebaseAuth();
-    if (!phone || !auth?.currentUser) return;
-    setLoading(true);
-    try {
-      const token = await auth.currentUser.getIdToken();
-      await apiFetchWithAuth<{ success?: boolean }>("/api/users/me/phone", token, {
-        method: "POST",
-        body: JSON.stringify({ phone, code }),
-      });
-      phoneForOtpRef.current = null;
-      setPhoneOtpSent(false);
-      await syncUser(auth.currentUser);
-    } finally {
-      setLoading(false);
-    }
-  }, [syncUser]);
+  const confirmPhoneOtp = useCallback(
+    async (code: string) => {
+      const phone = phoneForOtpRef.current;
+      const token = getStoredToken();
+      if (!phone || !token) return;
+      setLoading(true);
+      try {
+        await apiFetchWithAuth<{ success?: boolean }>(
+          "/api/users/me/phone",
+          token,
+          {
+            method: "POST",
+            body: JSON.stringify({ phone, code }),
+          }
+        );
+        phoneForOtpRef.current = null;
+        setPhoneOtpSent(false);
+        await loadUserFromToken(token);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loadUserFromToken]
+  );
 
   const resetPhoneOtp = useCallback(() => {
     phoneForOtpRef.current = null;
@@ -180,18 +160,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = useCallback(async () => {
-    const auth = getFirebaseAuth();
-    if (auth) await firebaseSignOut(auth);
+    clearStoredToken();
     setUser(null);
     setPhoneOtpSent(false);
     phoneForOtpRef.current = null;
   }, []);
 
   const getToken = useCallback(async (): Promise<string | null> => {
-    const auth = getFirebaseAuth();
-    const firebaseUser = auth?.currentUser;
-    if (!firebaseUser) return null;
-    return firebaseUser.getIdToken();
+    return getStoredToken();
   }, []);
 
   const value: AuthContextValue = {
@@ -199,7 +175,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     phoneOtpSent,
     getToken,
-    signInWithGoogle,
+    handleGoogleCredential,
     sendPhoneOtp,
     confirmPhoneOtp,
     resetPhoneOtp,

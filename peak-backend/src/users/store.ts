@@ -1,6 +1,7 @@
 import type { RowDataPacket } from "mysql2";
 import { getPool } from "../db";
 
+// Column is still named firebase_uid to avoid a DB migration; it now stores the Google `sub` claim.
 const USERS_TABLE_SQL = `
   CREATE TABLE IF NOT EXISTS users (
     firebase_uid VARCHAR(255) PRIMARY KEY,
@@ -34,7 +35,7 @@ async function ensureTable(): Promise<void> {
 }
 
 export async function getOrCreateUser(
-  firebaseUid: string,
+  uid: string,
   email: string | null,
   displayName: string | null
 ): Promise<UserProfile> {
@@ -43,7 +44,7 @@ export async function getOrCreateUser(
   const now = Date.now();
   const [rows] = await pool.query<RowDataPacket[]>(
     "SELECT * FROM users WHERE firebase_uid = ?",
-    [firebaseUid]
+    [uid]
   );
   const existing = rows[0] as UserRow | undefined;
   if (existing) {
@@ -56,7 +57,7 @@ export async function getOrCreateUser(
   }
   await pool.query(
     "INSERT INTO users (firebase_uid, phone, email, display_name, created_at, updated_at) VALUES (?, NULL, ?, ?, ?, ?)",
-    [firebaseUid, email, displayName, now, now]
+    [uid, email, displayName, now, now]
   );
   return {
     hasPhone: false,
@@ -66,24 +67,23 @@ export async function getOrCreateUser(
   };
 }
 
-/** Get phone and email for a user by Firebase UID. Returns null if user not found. */
-export async function getProfileByUid(firebaseUid: string): Promise<{ phone: string | null; email: string | null } | null> {
+export async function getProfileByUid(uid: string): Promise<{ phone: string | null; email: string | null } | null> {
   await ensureTable();
   const pool = await getPool();
   const [rows] = await pool.query<RowDataPacket[]>(
     "SELECT phone, email FROM users WHERE firebase_uid = ?",
-    [firebaseUid]
+    [uid]
   );
   const row = rows[0] as { phone: string | null; email: string | null } | undefined;
   return row ?? null;
 }
 
-export async function setUserPhone(firebaseUid: string, phone: string): Promise<void> {
+export async function setUserPhone(uid: string, phone: string): Promise<void> {
   await ensureTable();
   const pool = await getPool();
   const now = Date.now();
   await pool.query(
     "UPDATE users SET phone = ?, updated_at = ? WHERE firebase_uid = ?",
-    [phone, now, firebaseUid]
+    [phone, now, uid]
   );
 }

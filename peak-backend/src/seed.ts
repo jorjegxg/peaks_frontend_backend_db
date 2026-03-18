@@ -1,7 +1,7 @@
 /**
  * Seeds the database with dummy reservations. Run with: npm run db:seed
  */
-import "dotenv/config";
+import "./env";
 import { getPool } from "./db";
 import { ensureTable, type Reservation } from "./reservations/store";
 

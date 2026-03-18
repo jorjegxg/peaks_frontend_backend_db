@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, type RefCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { Translations } from "@/lib/translations";
@@ -16,7 +16,7 @@ import {
   type Reservation,
 } from "@/lib/reservations";
 import { useAuth } from "@/context/AuthContext";
-import { isFirebaseConfigured } from "@/lib/firebase";
+import { isGoogleAuthConfigured, renderGoogleSignInButton } from "@/lib/google-auth";
 
 const PS5_IMAGE = "/playstation.jpg";
 const PC_IMAGE = "/pc.jpg";
@@ -125,6 +125,18 @@ function toE164(phone: string, defaultCountryCode = "+40"): string {
   return `+${digits}`;
 }
 
+function GoogleSignInButton({ onCredential }: { onCredential: (credential: string) => void }) {
+  const containerRef: RefCallback<HTMLDivElement> = useCallback(
+    (node) => {
+      if (!node) return;
+      node.innerHTML = "";
+      renderGoogleSignInButton(node, onCredential).catch(console.error);
+    },
+    [onCredential]
+  );
+  return <div ref={containerRef} className="inline-block" />;
+}
+
 export function ReservationContent({ t, basePath = "" }: Props) {
   const {
     user,
@@ -133,7 +145,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     sendPhoneOtp,
     confirmPhoneOtp,
     resetPhoneOtp,
-    signInWithGoogle,
+    handleGoogleCredential,
     signOut,
     getToken,
   } = useAuth();
@@ -379,16 +391,9 @@ export function ReservationContent({ t, basePath = "" }: Props) {
             <div className="mt-6 rounded-xl border border-accent/40 bg-accent/5 p-6 text-center">
               <p className="text-foreground/90 mb-2">{t.reservation.signInWithGoogleFirst}</p>
               <p className="text-foreground/70 text-sm mb-4">{t.reservation.thenVerifyPhone}</p>
-              {isFirebaseConfigured() ? (
+              {isGoogleAuthConfigured() ? (
                 <>
-                  <button
-                    type="button"
-                    onClick={() => signInWithGoogle().catch((e) => setPhoneAuthError(e instanceof Error ? e.message : "Sign-in failed"))}
-                    disabled={authLoading}
-                    className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-white font-medium shadow hover:opacity-90 transition disabled:opacity-50 border border-accent"
-                  >
-                    {t.reservation.signInWithGoogle}
-                  </button>
+                  <GoogleSignInButton onCredential={(c) => handleGoogleCredential(c).catch((e) => setPhoneAuthError(e instanceof Error ? e.message : "Sign-in failed"))} />
                   {phoneAuthError && <p className="text-sm text-red-500 mt-3" role="alert">{phoneAuthError}</p>}
                 </>
               ) : (

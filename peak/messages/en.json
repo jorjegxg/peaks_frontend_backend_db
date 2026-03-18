@@ -145,7 +145,7 @@
     "signInToReserve": "Sign in to make a reservation.",
     "signInWithGoogleFirst": "Step 1 — Sign in with Google",
     "thenVerifyPhone": "Then you’ll verify your phone number (Step 2) to complete your account.",
-    "signInNotConfigured": "Google sign-in is not configured. Set NEXT_PUBLIC_FIREBASE_* in .env.local.",
+    "signInNotConfigured": "Google sign-in is not configured. Set NEXT_PUBLIC_GOOGLE_CLIENT_ID in .env.local.",
     "step2VerifyPhone": "Step 2 — Verify your phone",
     "signInWithGoogle": "Sign in with Google",
     "verifyPhoneToComplete": "Enter your phone number and we’ll send you a code to verify it.",

@@ -1,15 +1,14 @@
-import "dotenv/config";
+import "./env";
 import app from "./app";
-import { initFirebaseAdmin, isFirebaseConfigured } from "./auth/firebase";
+import { isAuthConfigured } from "./auth/google";
 
 const PORT = process.env.PORT || 3001;
 
-initFirebaseAdmin();
-if (isFirebaseConfigured()) {
-  console.log("[auth] Firebase Admin initialized");
+if (isAuthConfigured()) {
+  console.log("[auth] Google OAuth + JWT configured");
 } else {
   console.warn(
-    "[auth] Firebase Admin not configured — /api/users/* will return 503. In peak-backend .env set: GOOGLE_APPLICATION_CREDENTIALS=./firebase-service-account.json"
+    "[auth] Auth not configured — set GOOGLE_CLIENT_ID and JWT_SECRET in .env"
   );
 }
 

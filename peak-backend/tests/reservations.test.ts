@@ -3,8 +3,8 @@ import request from "supertest";
 
 const getReservationsForDate = vi.fn();
 const saveReservation = vi.fn();
-const verifyFirebaseToken = vi.fn();
-const isFirebaseConfigured = vi.fn();
+const verifySessionToken = vi.fn();
+const isAuthConfigured = vi.fn();
 const getProfileByUid = vi.fn();
 
 vi.mock("../src/reservations/store", () => ({
@@ -12,9 +12,9 @@ vi.mock("../src/reservations/store", () => ({
   saveReservation,
 }));
 
-vi.mock("../src/auth/firebase", () => ({
-  verifyFirebaseToken,
-  isFirebaseConfigured,
+vi.mock("../src/auth/google", () => ({
+  verifySessionToken,
+  isAuthConfigured,
 }));
 
 vi.mock("../src/users/store", () => ({
@@ -86,8 +86,8 @@ describe("Reservation routes", () => {
     };
 
     beforeEach(() => {
-      isFirebaseConfigured.mockReturnValue(true);
-      verifyFirebaseToken.mockResolvedValue({ uid: "test-uid" });
+      isAuthConfigured.mockReturnValue(true);
+      verifySessionToken.mockReturnValue({ sub: "test-uid" });
       getProfileByUid.mockResolvedValue(testProfile);
     });
 

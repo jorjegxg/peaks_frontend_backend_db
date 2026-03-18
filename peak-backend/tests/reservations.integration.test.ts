@@ -1,17 +1,20 @@
 /**
  * Reservation integration tests: real database.
- * Auth is mocked so POST works without a real Firebase token; reservations store is real.
+ * Auth is mocked so POST works without a real Google token; reservations store is real.
  * Run with: npm run test:integration
  * Requires: DATABASE_URL or MYSQL_* env (e.g. from .env or .env.test).
  */
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 import { describe, it, expect, afterEach, vi, beforeEach } from "vitest";
 import request from "supertest";
 import { getPool } from "../src/db";
 
-vi.mock("../src/auth/firebase", () => ({
-  verifyFirebaseToken: vi.fn().mockResolvedValue({ uid: "integration-test-uid" }),
-  isFirebaseConfigured: vi.fn().mockReturnValue(true),
+vi.mock("../src/auth/google", () => ({
+  verifySessionToken: vi.fn().mockReturnValue({ sub: "integration-test-uid" }),
+  isAuthConfigured: vi.fn().mockReturnValue(true),
 }));
 
 const getProfileByUid = vi.fn();

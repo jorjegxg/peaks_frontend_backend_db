@@ -145,7 +145,7 @@
     "signInToReserve": "Conectează-te pentru a face o rezervare.",
     "signInWithGoogleFirst": "Pasul 1 — Conectare cu Google",
     "thenVerifyPhone": "Apoi îți vei verifica numărul de telefon (Pasul 2) pentru a-ți finaliza contul.",
-    "signInNotConfigured": "Conectarea cu Google nu este configurată. Setează NEXT_PUBLIC_FIREBASE_* în .env.local.",
+    "signInNotConfigured": "Conectarea cu Google nu este configurată. Setează NEXT_PUBLIC_GOOGLE_CLIENT_ID în .env.local.",
     "step2VerifyPhone": "Pasul 2 — Verifică numărul de telefon",
     "signInWithGoogle": "Conectare cu Google",
     "verifyPhoneToComplete": "Introdu numărul de telefon și îți trimitem un cod pentru verificare.",

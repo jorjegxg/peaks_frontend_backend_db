@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { verifyFirebaseToken, isFirebaseConfigured } from "../auth/firebase";
+import { verifySessionToken, isAuthConfigured } from "../auth/google";
 import { getProfileByUid, getOrCreateUser } from "../users/store";
 import {
   getReservationsForDate,
@@ -20,7 +20,6 @@ function getBearerToken(req: Request): string | null {
 
 /**
  * GET /api/reservations?date=YYYY-MM-DD
- * Returns reservations for the given date.
  */
 router.get("/", async (req: Request, res: Response) => {
   const date = req.query.date as string;
@@ -38,15 +37,14 @@ router.get("/", async (req: Request, res: Response) => {
 
 /**
  * POST /api/reservations
- * Authorization: Bearer <Firebase ID token> required.
+ * Authorization: Bearer <session JWT>
  * Body: { type, station, date, time, duration, name }
- * Phone and email are taken from the user's profile.
  */
 router.post("/", async (req: Request, res: Response) => {
-  if (!isFirebaseConfigured()) {
+  if (!isAuthConfigured()) {
     return res.status(503).json({
       error: "Authentication service is not configured",
-      hint: "Set GOOGLE_APPLICATION_CREDENTIALS or FIREBASE_SERVICE_ACCOUNT_JSON in .env",
+      hint: "Set GOOGLE_CLIENT_ID and JWT_SECRET in .env",
     });
   }
   const token = getBearerToken(req);
@@ -54,12 +52,12 @@ router.post("/", async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Authorization required" });
   }
 
-  let uid: string;
+  let sub: string;
   let email: string | null = null;
   let displayName: string | null = null;
   try {
-    const decoded = await verifyFirebaseToken(token);
-    uid = decoded.uid;
+    const decoded = verifySessionToken(token);
+    sub = decoded.sub;
     email = decoded.email ?? null;
     displayName = decoded.name ?? null;
   } catch (err) {
@@ -67,10 +65,10 @@ router.post("/", async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
 
-  let profile = await getProfileByUid(uid);
+  let profile = await getProfileByUid(sub);
   if (!profile) {
-    await getOrCreateUser(uid, email, displayName);
-    profile = await getProfileByUid(uid);
+    await getOrCreateUser(sub, email, displayName);
+    profile = await getProfileByUid(sub);
   }
   if (!profile) {
     return res.status(500).json({ error: "Failed to load or create user profile" });
@@ -84,7 +82,7 @@ router.post("/", async (req: Request, res: Response) => {
   const { type, station, date, time, duration, name, userId } = body;
 
   console.log("[reservations] POST /api/reservations payload:", {
-    uid,
+    sub,
     emailFromProfile,
     phone,
     body,
@@ -115,7 +113,6 @@ router.post("/", async (req: Request, res: Response) => {
     });
   }
 
-  // Enforce minimum advance booking time
   const now = new Date();
   const reservationStart = new Date(`${date}T${time}:00`);
   if (Number.isNaN(reservationStart.getTime())) {
@@ -140,7 +137,7 @@ router.post("/", async (req: Request, res: Response) => {
       name: trimmedName,
       phone,
       email: emailFromProfile,
-      ...(userId ?? uid ? { userId: userId ?? uid } : {}),
+      ...(userId ?? sub ? { userId: userId ?? sub } : {}),
     });
     res.status(201).json({ reservation });
   } catch (err) {
@@ -151,11 +148,10 @@ router.post("/", async (req: Request, res: Response) => {
 
 /**
  * DELETE /api/reservations/:id
- * Authorization: Bearer <Firebase ID token>
- * Deletes a reservation owned by the current user.
+ * Authorization: Bearer <session JWT>
  */
 router.delete("/:id", async (req: Request, res: Response) => {
-  if (!isFirebaseConfigured()) {
+  if (!isAuthConfigured()) {
     return res.status(503).json({
       error: "Authentication service is not configured",
     });
@@ -165,10 +161,10 @@ router.delete("/:id", async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Authorization required" });
   }
 
-  let uid: string;
+  let sub: string;
   try {
-    const decoded = await verifyFirebaseToken(token);
-    uid = decoded.uid;
+    const decoded = verifySessionToken(token);
+    sub = decoded.sub;
   } catch (err) {
     console.error("[reservations] verify token failed (DELETE):", err);
     return res.status(401).json({ error: "Invalid or expired token" });
@@ -180,7 +176,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
   }
 
   try {
-    const deleted = await deleteReservationForUser(id, uid);
+    const deleted = await deleteReservationForUser(id, sub);
     if (!deleted) {
       return res.status(404).json({ error: "Reservation not found" });
     }

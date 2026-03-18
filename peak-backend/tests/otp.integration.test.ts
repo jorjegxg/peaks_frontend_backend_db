@@ -3,7 +3,10 @@
  * Run with: npm run test:integration
  * Requires: DATABASE_URL or MYSQL_* env (e.g. from .env or .env.test).
  */
-import "dotenv/config";
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import type { RowDataPacket } from "mysql2";
 import request from "supertest";

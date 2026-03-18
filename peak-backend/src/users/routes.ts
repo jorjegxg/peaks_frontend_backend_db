@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { verifyFirebaseToken, isFirebaseConfigured } from "../auth/firebase";
+import { verifySessionToken, isAuthConfigured } from "../auth/google";
 import { getOrCreateUser, setUserPhone } from "./store";
 import { verifyOtp } from "../otp/store";
 
@@ -13,14 +13,13 @@ function getBearerToken(req: Request): string | null {
 
 /**
  * GET /api/users/me
- * Authorization: Bearer <Firebase ID token>
- * Returns user profile; creates user if first time. hasPhone is false until they verify phone.
+ * Authorization: Bearer <session JWT>
  */
 router.get("/me", async (req: Request, res: Response) => {
-  if (!isFirebaseConfigured()) {
+  if (!isAuthConfigured()) {
     return res.status(503).json({
       error: "Authentication service is not configured",
-      hint: "Set FIREBASE_SERVICE_ACCOUNT_JSON or GOOGLE_APPLICATION_CREDENTIALS in peak-backend .env",
+      hint: "Set GOOGLE_CLIENT_ID and JWT_SECRET in .env",
     });
   }
   const token = getBearerToken(req);
@@ -28,8 +27,8 @@ router.get("/me", async (req: Request, res: Response) => {
     return res.status(401).json({ error: "Authorization required" });
   }
   try {
-    const { uid, email, name } = await verifyFirebaseToken(token);
-    const profile = await getOrCreateUser(uid, email ?? null, name ?? null);
+    const { sub, email, name } = verifySessionToken(token);
+    const profile = await getOrCreateUser(sub, email ?? null, name ?? null);
     res.json(profile);
   } catch (err) {
     console.error("[users] GET /me failed:", err);
@@ -39,15 +38,14 @@ router.get("/me", async (req: Request, res: Response) => {
 
 /**
  * POST /api/users/me/phone
- * Authorization: Bearer <Firebase ID token>
+ * Authorization: Bearer <session JWT>
  * Body: { phone: string, code: string }
- * Verifies OTP and links phone to the authenticated user.
  */
 router.post("/me/phone", async (req: Request, res: Response) => {
-  if (!isFirebaseConfigured()) {
+  if (!isAuthConfigured()) {
     return res.status(503).json({
       error: "Authentication service is not configured",
-      hint: "Set FIREBASE_SERVICE_ACCOUNT_JSON or GOOGLE_APPLICATION_CREDENTIALS in peak-backend .env",
+      hint: "Set GOOGLE_CLIENT_ID and JWT_SECRET in .env",
     });
   }
   const token = getBearerToken(req);
@@ -65,12 +63,12 @@ router.post("/me/phone", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Verification code is required" });
   }
   try {
-    const { uid } = await verifyFirebaseToken(token);
+    const { sub } = verifySessionToken(token);
     const valid = await verifyOtp(e164, code.trim());
     if (!valid) {
       return res.status(400).json({ error: "Invalid or expired code", verified: false });
     }
-    await setUserPhone(uid, e164);
+    await setUserPhone(sub, e164);
     res.json({ success: true, message: "Phone verified and linked" });
   } catch (err) {
     console.error("[users] POST /me/phone failed:", err);
