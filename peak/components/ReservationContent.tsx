@@ -657,6 +657,60 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               )}
             </div>
 
+            {type && (
+              <div ref={stationSectionRef}>
+                <label className="block text-sm font-medium text-foreground/90 mb-3">
+                  {type === "ps5" ? t.reservation.selectStation : t.reservation.selectStations} (
+                  {type === "ps5" ? t.reservation.ps5Label : t.reservation.pcLabel})
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {stations.map((num) => {
+                    const isReserved = reservedStationNums.includes(num);
+                    const isSelected = selectedStations.includes(num);
+                    const toggleStation = () => {
+                      if (isReserved) return;
+                      if (type === "ps5") {
+                        setSelectedStations(isSelected ? [] : [num]);
+                      } else {
+                        setSelectedStations((prev) =>
+                          isSelected
+                            ? prev.filter((s) => s !== num)
+                            : [...prev, num].sort((a, b) => a - b)
+                        );
+                      }
+                    };
+                    return (
+                      <button
+                        key={num}
+                        type="button"
+                        onClick={toggleStation}
+                        disabled={isReserved}
+                        title={
+                          isReserved
+                            ? t.reservation.stationReserved
+                            : t.reservation.stationAvailable
+                        }
+                        className={`w-14 h-14 rounded-xl border-2 font-bold text-lg transition flex flex-col items-center justify-center gap-0.5 ${
+                          isReserved
+                            ? "border-foreground/30 bg-foreground/10 text-foreground/50 cursor-not-allowed"
+                            : isSelected
+                              ? "border-accent bg-accent text-white led-glow"
+                              : "border-accent/40 bg-foreground/5 text-foreground hover:border-accent/60"
+                        }`}
+                      >
+                        <span>{num}</span>
+                        {isReserved && (
+                          <span className="text-[10px] font-normal uppercase">
+                            {t.reservation.stationReserved}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             <p className="text-sm text-foreground/80">
               {t.reservation.reservedSlotsFor} <strong className="text-foreground">{displayDate}</strong>
             </p>
@@ -714,56 +768,13 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                   <option value="2">{t.reservation.duration2h}</option>
                   <option value="3">{t.reservation.duration3h}</option>
                   <option value="4">{t.reservation.duration4h}</option>
+                  <option value="5">{t.reservation.duration5h}</option>
+                  <option value="6">{t.reservation.duration6h}</option>
+                  <option value="7">{t.reservation.duration7h}</option>
+                  <option value="8">{t.reservation.duration8h}</option>
                 </select>
               </div>
             </div>
-
-            {type && (
-              <div ref={stationSectionRef}>
-                <label className="block text-sm font-medium text-foreground/90 mb-3">
-                  {type === "ps5" ? t.reservation.selectStation : t.reservation.selectStations} ({type === "ps5" ? t.reservation.ps5Label : t.reservation.pcLabel})
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {stations.map((num) => {
-                    const isReserved = reservedStationNums.includes(num);
-                    const isSelected = selectedStations.includes(num);
-                    const toggleStation = () => {
-                      if (isReserved) return;
-                      if (type === "ps5") {
-                        setSelectedStations(isSelected ? [] : [num]);
-                      } else {
-                        setSelectedStations((prev) =>
-                          isSelected ? prev.filter((s) => s !== num) : [...prev, num].sort((a, b) => a - b)
-                        );
-                      }
-                    };
-                    return (
-                      <button
-                        key={num}
-                        type="button"
-                        onClick={toggleStation}
-                        disabled={isReserved}
-                        title={isReserved ? t.reservation.stationReserved : t.reservation.stationAvailable}
-                        className={`w-14 h-14 rounded-xl border-2 font-bold text-lg transition flex flex-col items-center justify-center gap-0.5 ${
-                          isReserved
-                            ? "border-foreground/30 bg-foreground/10 text-foreground/50 cursor-not-allowed"
-                            : isSelected
-                              ? "border-accent bg-accent text-white led-glow"
-                              : "border-accent/40 bg-foreground/5 text-foreground hover:border-accent/60"
-                        }`}
-                      >
-                        <span>{num}</span>
-                        {isReserved && (
-                          <span className="text-[10px] font-normal uppercase">
-                            {t.reservation.stationReserved}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
 
             <div ref={nameSectionRef} className="rounded-xl border border-accent/40 bg-foreground/5 p-6 space-y-4">
               <h3 className="font-semibold text-accent">{t.contact.sendMessage}</h3>
