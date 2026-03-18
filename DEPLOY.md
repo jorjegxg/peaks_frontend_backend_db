@@ -74,31 +74,11 @@ rsync -avz --exclude node_modules --exclude .git peak-backend/ root@YOUR_SERVER_
 
 On the **server**:
 
-```bash
-cd /opt/peak/peak-backend
-```
-
-Create `.env` on the server (same variables as locally, but use strong passwords):
+Create **`.env`** in the repo root (`peaks/.env`). Copy from `.env.example`.
 
 ```bash
+cd /opt/peak
 nano .env
-```
-
-Example (fill in real values):
-
-```env
-MYSQL_ROOT_PASSWORD=your_strong_root_password
-MYSQL_DATABASE=peak
-MYSQL_USER=peak
-MYSQL_PASSWORD=your_strong_user_password
-
-# Optional: Twilio (for OTP)
-TWILIO_ACCOUNT_SID=
-TWILIO_AUTH_TOKEN=
-TWILIO_PHONE_NUMBER=
-
-# Firebase (paste your service account JSON on one line, or use a file path)
-FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account",...}
 ```
 
 Then build and start:

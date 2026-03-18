@@ -26,7 +26,7 @@ type AuthContextValue = {
   loading: boolean;
   phoneOtpSent: boolean;
   getToken: () => Promise<string | null>;
-  handleGoogleCredential: (credential: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   sendPhoneOtp: (phoneNumber: string) => Promise<void>;
   confirmPhoneOtp: (code: string) => Promise<void>;
   resetPhoneOtp: () => void;
@@ -90,23 +90,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [loadUserFromToken]);
 
-  const handleGoogleCredential = useCallback(async (credential: string) => {
+  const signInWithGoogle = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await apiFetch<{ token: string; profile: UserProfile }>(
-        "/api/auth/google",
+      const { getFirebaseAuth } = await import("@/lib/firebase");
+      const { GoogleAuthProvider, signInWithPopup } = await import(
+        "firebase/auth"
+      );
+
+      const auth = getFirebaseAuth();
+      const provider = new GoogleAuthProvider();
+      const signInResult = await signInWithPopup(auth, provider);
+      const idToken = await signInResult.user.getIdToken();
+
+      const session = await apiFetch<{ token: string; profile: UserProfile }>(
+        "/api/auth/firebase",
         {
           method: "POST",
-          body: JSON.stringify({ credential }),
+          body: JSON.stringify({ idToken }),
         }
       );
-      setStoredToken(result.token);
+      setStoredToken(session.token);
       setUser({
-        uid: result.token,
-        email: result.profile.email,
-        displayName: result.profile.displayName,
-        phoneNumber: result.profile.phone,
-        needsPhoneVerification: !result.profile.hasPhone,
+        uid: session.token,
+        email: session.profile.email,
+        displayName: session.profile.displayName,
+        phoneNumber: session.profile.phone,
+        needsPhoneVerification: !session.profile.hasPhone,
       });
     } finally {
       setLoading(false);
@@ -175,7 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     phoneOtpSent,
     getToken,
-    handleGoogleCredential,
+    signInWithGoogle,
     sendPhoneOtp,
     confirmPhoneOtp,
     resetPhoneOtp,

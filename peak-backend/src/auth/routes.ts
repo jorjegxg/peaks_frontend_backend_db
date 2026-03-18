@@ -1,39 +1,44 @@
 import { Router, Request, Response } from "express";
 import {
-  verifyGoogleToken,
   createSessionToken,
-  isAuthConfigured,
 } from "./google";
+import { verifyFirebaseIdToken, isFirebaseAuthConfigured } from "./firebase";
 import { getOrCreateUser } from "../users/store";
 
 const router = Router();
 
 /**
- * POST /api/auth/google
- * Body: { credential: string }  (Google ID token from the frontend)
+ * POST /api/auth/firebase
+ * Body: { idToken: string }  (Firebase ID token from the frontend)
  * Returns a backend-issued JWT session token + user profile.
  */
-router.post("/google", async (req: Request, res: Response) => {
-  if (!isAuthConfigured()) {
+router.post("/firebase", async (req: Request, res: Response) => {
+  if (!isFirebaseAuthConfigured()) {
     return res.status(503).json({
       errorCode: "AUTH_NOT_CONFIGURED",
-      error: "Authentication service is not configured",
+      error: "Firebase authentication is not configured",
     });
   }
 
-  const { credential } = req.body as { credential?: string };
-  if (!credential || typeof credential !== "string") {
-    return res.status(400).json({ errorCode: "AUTH_CREDENTIAL_REQUIRED", error: "credential is required" });
+  const { idToken } = req.body as { idToken?: string };
+  if (!idToken || typeof idToken !== "string") {
+    return res.status(400).json({
+      errorCode: "AUTH_ID_TOKEN_REQUIRED",
+      error: "idToken is required",
+    });
   }
 
   try {
-    const { sub, email, name } = await verifyGoogleToken(credential);
-    const profile = await getOrCreateUser(sub, email ?? null, name ?? null);
-    const token = createSessionToken({ sub, email, name });
+    const { uid, email, name } = await verifyFirebaseIdToken(idToken);
+    const profile = await getOrCreateUser(uid, email ?? null, name ?? null);
+    const token = createSessionToken({ sub: uid, email, name });
     res.json({ token, profile });
   } catch (err) {
-    console.error("[auth] POST /api/auth/google failed:", err);
-    return res.status(401).json({ errorCode: "AUTH_INVALID_CREDENTIAL", error: "Invalid Google credential" });
+    console.error("[auth] POST /api/auth/firebase failed:", err);
+    return res.status(401).json({
+      errorCode: "AUTH_INVALID_TOKEN",
+      error: "Invalid Firebase token",
+    });
   }
 });
 

@@ -1,15 +1,20 @@
 import "./env";
 import app from "./app";
 import { isAuthConfigured } from "./auth/google";
+import { isFirebaseAuthConfigured } from "./auth/firebase";
 
 const PORT = process.env.PORT || 3001;
 
 if (isAuthConfigured()) {
-  console.log("[auth] Google OAuth + JWT configured");
+  if (isFirebaseAuthConfigured()) {
+    console.log("[auth] Firebase sign-in + session JWT configured");
+  } else {
+    console.log(
+      "[auth] Session JWT configured — set FIREBASE_SERVICE_ACCOUNT_JSON to enable Google sign-in"
+    );
+  }
 } else {
-  console.warn(
-    "[auth] Auth not configured — set GOOGLE_CLIENT_ID and JWT_SECRET in .env"
-  );
+  console.warn("[auth] Set JWT_SECRET in peaks/.env for authenticated API routes");
 }
 
 const server = app.listen(PORT, () => {

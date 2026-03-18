@@ -18,8 +18,9 @@ function getClient(): OAuth2Client {
   return client;
 }
 
+/** True when session JWT signing/verification is available (required for protected API routes). */
 export function isAuthConfigured(): boolean {
-  return getGoogleClientId().length > 0 && getJwtSecret().length > 0;
+  return getJwtSecret().length > 0;
 }
 
 export async function verifyGoogleToken(

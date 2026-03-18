@@ -12,6 +12,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://cupoane.space",
   "https://www.cupoane.space",
+  "https://unchivalrous-honoredly-abigail.ngrok-free.dev",
 ];
 app.use(
   cors({

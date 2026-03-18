@@ -16,7 +16,6 @@ import {
   type Reservation,
 } from "@/lib/reservations";
 import { useAuth } from "@/context/AuthContext";
-import { isGoogleAuthConfigured, initGoogleIdentityServices, renderGoogleSignInButton } from "@/lib/google-auth";
 import { ApiError } from "@/lib/api";
 
 const PS5_IMAGE = "/playstation.jpg";
@@ -126,30 +125,19 @@ function toE164(phone: string, defaultCountryCode = "+40"): string {
   return `+${digits}`;
 }
 
-function GoogleSignInButton({ onCredential }: { onCredential: (credential: string) => void }) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const didRenderRef = useRef(false);
-
-  useEffect(() => {
-    if (didRenderRef.current) return;
-    const node = containerRef.current;
-    if (!node) return;
-    didRenderRef.current = true;
-
-    // Wait for the container to mount + paint, then init + render.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        initGoogleIdentityServices(onCredential)
-          .then(() => {
-            node.innerHTML = "";
-            return renderGoogleSignInButton(node);
-          })
-          .catch(console.error);
-      });
-    });
-  }, [onCredential]);
-
-  return <div ref={containerRef} className="inline-block" />;
+function GoogleCustomButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="inline-flex items-center justify-center gap-3 rounded-xl bg-black px-5 py-3 text-white font-semibold shadow-sm hover:bg-black/90 transition"
+    >
+      <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-white text-black font-bold">
+        G
+      </span>
+      <span>Continue with Google</span>
+    </button>
+  );
 }
 
 export function ReservationContent({ t, basePath = "" }: Props) {
@@ -160,7 +148,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     sendPhoneOtp,
     confirmPhoneOtp,
     resetPhoneOtp,
-    handleGoogleCredential,
+    signInWithGoogle,
     signOut,
     getToken,
   } = useAuth();
@@ -448,22 +436,19 @@ export function ReservationContent({ t, basePath = "" }: Props) {
             <div className="mt-6 rounded-xl border border-accent/40 bg-accent/5 p-6 text-center">
               <p className="text-foreground/90 mb-2">{t.reservation.signInWithGoogleFirst}</p>
               <p className="text-foreground/70 text-sm mb-4">{t.reservation.thenVerifyPhone}</p>
-              {isGoogleAuthConfigured() ? (
-                <>
-                  <div className="inline-flex w-[280px] h-[44px] items-center justify-center">
-                    <GoogleSignInButton
-                      onCredential={(c) =>
-                        handleGoogleCredential(c).catch((e) =>
-                          setPhoneAuthError(e instanceof Error ? e.message : "Sign-in failed")
-                        )
-                      }
-                    />
-                  </div>
-                  {phoneAuthError && <p className="text-sm text-red-500 mt-3" role="alert">{phoneAuthError}</p>}
-                </>
-              ) : (
-                <p className="text-sm text-foreground/60">{t.reservation.signInNotConfigured}</p>
-              )}
+              <div className="inline-flex items-center justify-center">
+                <GoogleCustomButton
+                  onClick={() => {
+                    setPhoneAuthError("");
+                    signInWithGoogle().catch((e) =>
+                      setPhoneAuthError(
+                        e instanceof Error ? e.message : "Sign-in failed",
+                      ),
+                    );
+                  }}
+                />
+              </div>
+              {phoneAuthError && <p className="text-sm text-red-500 mt-3" role="alert">{phoneAuthError}</p>}
             </div>
           )}
 

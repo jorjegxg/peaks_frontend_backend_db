@@ -1,8 +1,13 @@
 import dotenv from "dotenv";
+import fs from "fs";
 import path from "path";
 import type { NextConfig } from "next";
 
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+/** peaks/.env only (parent of peak/) */
+const envPath = path.resolve(__dirname, "../.env");
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
 
 const nextConfig: NextConfig = {
   async headers() {
