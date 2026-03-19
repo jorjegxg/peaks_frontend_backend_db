@@ -2,19 +2,23 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Translations } from "@/lib/translations";
 
-const HERO_IMAGE = "/coffe.jpg";
-const PS5_IMAGE = "/playstation.jpg";
-const PC_IMAGE = "/pc.jpg";
+const HERO_IMAGE = "/crowd2.jpg";
+const PS5_IMAGE = "/3ps5.jpg";
+const PC_IMAGE = "/2pc.jpg";
 const CAFE_IMAGE = "/warzone.jpg";
-const STEERING_WHEEL_IMAGE = "/steering-weel.jpg";
+const STEERING_WHEEL_IMAGE = "/steering.jpg";
 
 // Game images from public/games – only games that have files in this folder
 const GAMES = "";
 const PC_GAMES = [
-  { id: "csgo", key: "csgo" as const, image: `${GAMES}/cs2.jpg` },
-  { id: "valorant", key: "valorant" as const, image: `${GAMES}/valorant.jpg` },
-  { id: "fortnite", key: "fortnite" as const, image: `${GAMES}/fortnite.jpg` },
-  { id: "roblox", key: "roblox" as const, image: `${GAMES}/roblox.png` },
+  { id: "csgo", key: "csgo" as const, image: `${GAMES}/2cs2.jpg` },
+  { id: "valorant", key: "valorant" as const, image: `${GAMES}/valorant.png` },
+  { id: "fortnite", key: "fortnite" as const, image: `${GAMES}/2fortnite.jpg` },
+  {
+    id: "roblox",
+    key: "roblox" as const,
+    image: `${GAMES}/roblox-pictures.jpg`,
+  },
 ] as const;
 const PS5_GAMES = [
   { id: "fc26", key: "fc26" as const, image: `${GAMES}/fc.avif` },
