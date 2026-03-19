@@ -10,8 +10,8 @@ const app = express();
 const allowedOrigins = [
   "https://peak-nu-nine.vercel.app",
   "http://localhost:3000",
-  "https://cupoane.space",
-  "https://www.cupoane.space",
+  "https://peak-gaming.site",
+  "https://www.peak-gaming.site",
   "https://unchivalrous-honoredly-abigail.ngrok-free.dev",
 ];
 app.use(
