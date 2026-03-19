@@ -18,7 +18,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT || 22 }}
           script: |
             set -e
-            cd /opt/peak
+            cd /peaks_frontend_backend_db
 
             echo "--- Pulling latest code ---"
             git pull origin main
