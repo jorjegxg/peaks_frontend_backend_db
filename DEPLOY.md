@@ -275,3 +275,6 @@ You can also trigger it manually from **GitHub → Actions → Deploy to VPS →
 - [ ] CORS origin set if frontend and API are on different domains.
 - [ ] GitHub secrets set (`SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY`).
 - [ ] Push to `main` triggers automatic deployment.
+
+
+test commit
