@@ -49,12 +49,17 @@ function DayCalendarTable({
       <table className="w-full min-w-[320px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-accent/30">
-            <th className="text-left py-2 pr-3 font-medium text-foreground/80 w-14">{t.reservation.time}</th>
+            <th className="text-left py-2 pr-3 font-medium text-foreground/80 w-14">
+              {t.reservation.time}
+            </th>
             {stations.map((s) => (
-              <th key={s} className="py-2 px-1 text-center font-medium text-foreground/80 w-20">
+              <th
+                key={s}
+                className="py-2 px-1 text-center font-medium text-foreground/80 w-20"
+              >
                 #{s}
                 {stationCount === 5 && s === 5 && (
-                  <div className="text-[10px] text-accent/70 font-normal">
+                  <div className="text-[9px] text-accent/70 font-normal text-center leading-tight wrap-break-word whitespace-normal">
                     {t.games.steeringWheelTitle}
                   </div>
                 )}
@@ -64,14 +69,22 @@ function DayCalendarTable({
         </thead>
         <tbody>
           {DAY_HOURS.map((h) => (
-            <tr key={h} className="border-b border-foreground/10 hover:bg-foreground/5">
+            <tr
+              key={h}
+              className="border-b border-foreground/10 hover:bg-foreground/5"
+            >
               <td className="py-1.5 pr-3 text-foreground/70 tabular-nums">
                 {String(h).padStart(2, "0")}:00
               </td>
               {stations.map((s) => {
                 const r = grid[h][s];
-                const resUserId = r?.userId ?? (r as { user_id?: string })?.user_id;
-                const isOwn = !!(r && currentUserId && resUserId === currentUserId);
+                const resUserId =
+                  r?.userId ?? (r as { user_id?: string })?.user_id;
+                const isOwn = !!(
+                  r &&
+                  currentUserId &&
+                  resUserId === currentUserId
+                );
                 const isDeleting = !!(r && deletingId === r.id);
                 return (
                   <td key={s} className="py-1.5 px-1 text-center">
@@ -142,15 +155,33 @@ function Spinner({ className = "" }: { className?: string }) {
 function GoogleLogo() {
   return (
     <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true">
-      <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-      <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-      <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.1 24.1 0 0 0 0 21.56l7.98-6.19z"/>
-      <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      <path
+        fill="#EA4335"
+        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+      />
+      <path
+        fill="#4285F4"
+        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.1 24.1 0 0 0 0 21.56l7.98-6.19z"
+      />
+      <path
+        fill="#34A853"
+        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+      />
     </svg>
   );
 }
 
-function GoogleCustomButton({ onClick, loading }: { onClick: () => void; loading?: boolean }) {
+function GoogleCustomButton({
+  onClick,
+  loading,
+}: {
+  onClick: () => void;
+  loading?: boolean;
+}) {
   return (
     <button
       type="button"
@@ -158,11 +189,7 @@ function GoogleCustomButton({ onClick, loading }: { onClick: () => void; loading
       disabled={loading}
       className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-6 py-3 font-medium text-gray-700 shadow-md ring-1 ring-black/10 transition-all hover:shadow-lg hover:ring-black/20 active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait"
     >
-      {loading ? (
-        <Spinner className="text-gray-500" />
-      ) : (
-        <GoogleLogo />
-      )}
+      {loading ? <Spinner className="text-gray-500" /> : <GoogleLogo />}
       <span className="text-[15px]">Continue with Google</span>
     </button>
   );
@@ -201,7 +228,8 @@ export function ReservationContent({ t, basePath = "" }: Props) {
   const [deleteError, setDeleteError] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
-  const [showChooseTypeNotification, setShowChooseTypeNotification] = useState(false);
+  const [showChooseTypeNotification, setShowChooseTypeNotification] =
+    useState(false);
 
   const typeSectionRef = useRef<HTMLDivElement | null>(null);
   const timeSectionRef = useRef<HTMLDivElement | null>(null);
@@ -254,7 +282,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
       }
       return t.reservation.errors.unknown;
     },
-    [t]
+    [t],
   );
 
   useEffect(() => {
@@ -300,7 +328,8 @@ export function ReservationContent({ t, basePath = "" }: Props) {
   }, [otpCode, confirmPhoneOtp, tError]);
 
   const maxStation = type === "ps5" ? 5 : type === "pc" ? 9 : 0;
-  const stations = maxStation > 0 ? Array.from({ length: maxStation }, (_, i) => i + 1) : [];
+  const stations =
+    maxStation > 0 ? Array.from({ length: maxStation }, (_, i) => i + 1) : [];
 
   const todayIso = new Date().toISOString().slice(0, 10);
   const displayDate = date || todayIso;
@@ -344,7 +373,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
         setDeletingId(null);
       }
     },
-    [getToken, tError, t.reservation.errors.authRequired]
+    [getToken, tError, t.reservation.errors.authRequired],
   );
 
   // Auto-hide success notifications
@@ -402,7 +431,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
         setSubmitError(
           t.reservation.validation.advanceBooking
             .replace("{hours}", String(MIN_ADVANCE_HOURS))
-            .replace("{unit}", unit)
+            .replace("{unit}", unit),
         );
         scrollToRef(timeSectionRef);
         return;
@@ -416,7 +445,10 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     const trimmedName = name.trim();
     if (trimmedName.length > MAX_NAME_LENGTH) {
       setSubmitError(
-        t.reservation.validation.nameTooLong.replace("{max}", String(MAX_NAME_LENGTH))
+        t.reservation.validation.nameTooLong.replace(
+          "{max}",
+          String(MAX_NAME_LENGTH),
+        ),
       );
       return;
     }
@@ -438,7 +470,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
             duration: Number(duration),
             name: trimmedName,
           },
-          token
+          token,
         );
       }
       const next = await getReservationsForDate(reservationDate);
@@ -465,14 +497,22 @@ export function ReservationContent({ t, basePath = "" }: Props) {
           {authLoading && (
             <div className="mt-6 flex items-center justify-center gap-3 rounded-xl border border-accent/40 bg-accent/5 p-6">
               <Spinner className="h-5 w-5 text-accent" />
-              <span className="text-foreground/70">{t.reservation.loadingAccount ?? "Loading your account…"}</span>
+              <span className="text-foreground/70">
+                {t.reservation.loadingAccount ?? "Loading your account…"}
+              </span>
             </div>
           )}
 
           {!authLoading && user && (
             <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
               <span className="text-foreground/70">
-                {t.reservation.signedInAs} <strong className="text-foreground">{user.email ?? user.displayName ?? user.phoneNumber ?? user.uid}</strong>
+                {t.reservation.signedInAs}{" "}
+                <strong className="text-foreground">
+                  {user.email ??
+                    user.displayName ??
+                    user.phoneNumber ??
+                    user.uid}
+                </strong>
               </span>
               <button
                 type="button"
@@ -486,8 +526,12 @@ export function ReservationContent({ t, basePath = "" }: Props) {
 
           {!authLoading && !user && (
             <div className="mt-6 rounded-xl border border-accent/40 bg-accent/5 p-6 text-center">
-              <p className="text-foreground/90 mb-2">{t.reservation.signInWithGoogleFirst}</p>
-              <p className="text-foreground/70 text-sm mb-4">{t.reservation.thenVerifyPhone}</p>
+              <p className="text-foreground/90 mb-2">
+                {t.reservation.signInWithGoogleFirst}
+              </p>
+              <p className="text-foreground/70 text-sm mb-4">
+                {t.reservation.thenVerifyPhone}
+              </p>
               <div className="inline-flex items-center justify-center">
                 <GoogleCustomButton
                   loading={isSigningIn}
@@ -504,19 +548,30 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                   }}
                 />
               </div>
-              {phoneAuthError && <p className="text-sm text-red-500 mt-3" role="alert">{phoneAuthError}</p>}
+              {phoneAuthError && (
+                <p className="text-sm text-red-500 mt-3" role="alert">
+                  {phoneAuthError}
+                </p>
+              )}
             </div>
           )}
 
           {!authLoading && user?.needsPhoneVerification && (
             <div className="mt-6 rounded-xl border border-accent/40 bg-accent/5 p-6 text-center">
-              <p className="text-foreground/90 mb-2">{t.reservation.step2VerifyPhone}</p>
-              <p className="text-foreground/70 text-sm mb-4">{t.reservation.verifyPhoneToComplete}</p>
+              <p className="text-foreground/90 mb-2">
+                {t.reservation.step2VerifyPhone}
+              </p>
+              <p className="text-foreground/70 text-sm mb-4">
+                {t.reservation.verifyPhoneToComplete}
+              </p>
               <div className="flex flex-col items-center gap-4 max-w-sm mx-auto">
                 {!phoneOtpSent ? (
                   <>
                     <div className="w-full text-left">
-                      <label htmlFor="verify-phone" className="block text-sm font-medium text-foreground/90 mb-1">
+                      <label
+                        htmlFor="verify-phone"
+                        className="block text-sm font-medium text-foreground/90 mb-1"
+                      >
                         {t.reservation.phone}
                       </label>
                       <input
@@ -530,17 +585,24 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         placeholder="+40 712 345 678"
                         className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground placeholder:text-foreground/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
                       />
-                      <p className="text-xs text-foreground/60 mt-1">{t.reservation.phoneFormatHint}</p>
+                      <p className="text-xs text-foreground/60 mt-1">
+                        {t.reservation.phoneFormatHint}
+                      </p>
                       {signInPhone.trim() && (
                         <p className="text-xs text-foreground/70 mt-2">
-                          {t.reservation.codeWillBeSentTo.replace("{number}", toE164(signInPhone))}
+                          {t.reservation.codeWillBeSentTo.replace(
+                            "{number}",
+                            toE164(signInPhone),
+                          )}
                         </p>
                       )}
                     </div>
                     <button
                       type="button"
                       onClick={handleSendOtp}
-                      disabled={authLoading || !signInPhone.trim() || isSendingOtp}
+                      disabled={
+                        authLoading || !signInPhone.trim() || isSendingOtp
+                      }
                       className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-white font-medium shadow hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed border border-accent"
                     >
                       {isSendingOtp && (
@@ -553,9 +615,15 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                   <>
                     <div className="w-full text-left">
                       <p className="text-xs text-foreground/70 mb-2">
-                        {t.reservation.codeSentTo.replace("{number}", toE164(signInPhone))}
+                        {t.reservation.codeSentTo.replace(
+                          "{number}",
+                          toE164(signInPhone),
+                        )}
                       </p>
-                      <label htmlFor="verify-otp" className="block text-sm font-medium text-foreground/90 mb-1">
+                      <label
+                        htmlFor="verify-otp"
+                        className="block text-sm font-medium text-foreground/90 mb-1"
+                      >
                         {t.reservation.enterCode}
                       </label>
                       <input
@@ -565,7 +633,9 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         autoComplete="one-time-code"
                         value={otpCode}
                         onChange={(e) => {
-                          setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6));
+                          setOtpCode(
+                            e.target.value.replace(/\D/g, "").slice(0, 6),
+                          );
                           setPhoneAuthError("");
                         }}
                         placeholder="123456"
@@ -576,7 +646,9 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                       <button
                         type="button"
                         onClick={handleConfirmOtp}
-                        disabled={authLoading || otpCode.length < 6 || isConfirmingOtp}
+                        disabled={
+                          authLoading || otpCode.length < 6 || isConfirmingOtp
+                        }
                         className="inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-3 text-white font-medium shadow hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed border border-accent"
                       >
                         {isConfirmingOtp && (
@@ -586,7 +658,11 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                       </button>
                       <button
                         type="button"
-                        onClick={() => { resetPhoneOtp(); setOtpCode(""); setSignInPhone(""); }}
+                        onClick={() => {
+                          resetPhoneOtp();
+                          setOtpCode("");
+                          setSignInPhone("");
+                        }}
                         className="rounded-lg border border-accent/40 bg-transparent px-4 py-3 text-accent hover:bg-accent/10 transition"
                       >
                         {t.reservation.changeNumber}
@@ -595,7 +671,9 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                   </>
                 )}
                 {phoneAuthError && (
-                  <p className="text-sm text-red-500" role="alert">{phoneAuthError}</p>
+                  <p className="text-sm text-red-500" role="alert">
+                    {phoneAuthError}
+                  </p>
                 )}
               </div>
             </div>
@@ -615,7 +693,10 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-black text-xs">
                 ✓
               </span>
-              <span>{t.reservation.phoneVerified ?? "Phone verified — your account is ready!"}</span>
+              <span>
+                {t.reservation.phoneVerified ??
+                  "Phone verified — your account is ready!"}
+              </span>
             </div>
           )}
 
@@ -626,302 +707,349 @@ export function ReservationContent({ t, basePath = "" }: Props) {
           )}
 
           {user && !user.needsPhoneVerification && (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-            <div ref={typeSectionRef}>
-              <label className="block text-sm font-medium text-foreground/90 mb-3">
-                {t.reservation.selectType}
-              </label>
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setType("ps5");
-                    setSelectedStations([]);
-                  }}
-                  className={`relative overflow-hidden rounded-xl border-2 p-6 text-left transition ${
-                    type === "ps5"
-                      ? "border-accent bg-accent/10 led-border-subtle"
-                      : "border-accent/40 bg-foreground/5 hover:border-accent/60 hover:led-border-subtle"
-                  }`}
-                >
-                  <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
-                    <Image
-                      src={PS5_IMAGE}
-                      alt="PS5"
-                      fill
-                      className="object-cover"
-                      sizes="200px"
-                    />
-                  </div>
-                  <span className="font-semibold text-foreground">{t.reservation.ps5Label}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setType("pc");
-                    setSelectedStations([]);
-                  }}
-                  className={`relative overflow-hidden rounded-xl border-2 p-6 text-left transition ${
-                    type === "pc"
-                      ? "border-accent bg-accent/10 led-border-subtle"
-                      : "border-accent/40 bg-foreground/5 hover:border-accent/60 hover:led-border-subtle"
-                  }`}
-                >
-                  <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
-                    <Image
-                      src={PC_IMAGE}
-                      alt="PC"
-                      fill
-                      className="object-cover"
-                      sizes="200px"
-                    />
-                  </div>
-                  <span className="font-semibold text-foreground">{t.reservation.pcLabel}</span>
-                </button>
-              </div>
-              {showTypeHint && !type && (
-                <p className="mt-2 text-sm text-red-500">
-                  {t.reservation.validation.chooseType}
-                </p>
-              )}
-            </div>
-
-            {type && (
-              <div ref={stationSectionRef}>
+            <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+              <div ref={typeSectionRef}>
                 <label className="block text-sm font-medium text-foreground/90 mb-3">
-                  {t.reservation.selectStations} ({type === "ps5" ? t.reservation.ps5Label : t.reservation.pcLabel})
+                  {t.reservation.selectType}
                 </label>
-                <div className="flex flex-wrap gap-3">
-                  {stations.map((num) => {
-                    const isReserved = reservedStationNums.includes(num);
-                    const isSelected = selectedStations.includes(num);
-                    const toggleStation = () => {
-                      if (isReserved) return;
-                      setSelectedStations((prev) =>
-                        isSelected
-                          ? prev.filter((s) => s !== num)
-                          : [...prev, num].sort((a, b) => a - b)
-                      );
-                    };
-                    return (
-                      <button
-                        key={num}
-                        type="button"
-                        onClick={toggleStation}
-                        disabled={isReserved}
-                        title={
-                          isReserved
-                            ? t.reservation.stationReserved
-                            : t.reservation.stationAvailable
-                        }
-                        className={`${type === "ps5" && num === 5 ? "w-20 h-16" : "w-14 h-14"} rounded-xl border-2 font-bold text-lg transition flex flex-col items-center justify-center gap-0.5 ${
-                          isReserved
-                            ? "border-foreground/30 bg-foreground/10 text-foreground/50 cursor-not-allowed"
-                            : isSelected
-                              ? "border-accent bg-accent text-white led-glow"
-                              : "border-accent/40 bg-foreground/5 text-foreground hover:border-accent/60"
-                        }`}
-                      >
-                        <span>{num}</span>
-                        {type === "ps5" && num === 5 && (
-                          <span className="text-[9px] font-normal text-accent/70 leading-tight">
-                            {t.games.steeringWheelTitle}
-                          </span>
-                        )}
-                        {isReserved && (
-                          <span className="text-[10px] font-normal uppercase">
-                            {t.reservation.stationReserved}
-                          </span>
-                        )}
-                      </button>
-                    );
-                  })}
+                <div className="grid grid-cols-2 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setType("ps5");
+                      setSelectedStations([]);
+                    }}
+                    className={`relative overflow-hidden rounded-xl border-2 p-6 text-left transition ${
+                      type === "ps5"
+                        ? "border-accent bg-accent/10 led-border-subtle"
+                        : "border-accent/40 bg-foreground/5 hover:border-accent/60 hover:led-border-subtle"
+                    }`}
+                  >
+                    <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
+                      <Image
+                        src={PS5_IMAGE}
+                        alt="PS5"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                        quality={90}
+                      />
+                    </div>
+                    <span className="font-semibold text-foreground">
+                      {t.reservation.ps5Label}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setType("pc");
+                      setSelectedStations([]);
+                    }}
+                    className={`relative overflow-hidden rounded-xl border-2 p-6 text-left transition ${
+                      type === "pc"
+                        ? "border-accent bg-accent/10 led-border-subtle"
+                        : "border-accent/40 bg-foreground/5 hover:border-accent/60 hover:led-border-subtle"
+                    }`}
+                  >
+                    <div className="relative aspect-video rounded-lg overflow-hidden mb-3">
+                      <Image
+                        src={PC_IMAGE}
+                        alt="PC"
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                        quality={90}
+                      />
+                    </div>
+                    <span className="font-semibold text-foreground">
+                      {t.reservation.pcLabel}
+                    </span>
+                  </button>
                 </div>
+                {showTypeHint && !type && (
+                  <p className="mt-2 text-sm text-red-500">
+                    {t.reservation.validation.chooseType}
+                  </p>
+                )}
               </div>
-            )}
 
-            <p className="text-sm text-foreground/80">
-              {t.reservation.reservedSlotsFor} <strong className="text-foreground">{displayDate}</strong>
-            </p>
-            <div className="grid gap-6 sm:grid-cols-2" ref={timeSectionRef}>
-              <div>
-                <label htmlFor="time" className="block text-sm font-medium text-foreground/90 mb-2">
-                  {t.reservation.time} <span className="text-accent">*</span>
-                </label>
-                {/*
+              {type && (
+                <div ref={stationSectionRef}>
+                  <label className="block text-sm font-medium text-foreground/90 mb-3">
+                    {t.reservation.selectStations} (
+                    {type === "ps5"
+                      ? t.reservation.ps5Label
+                      : t.reservation.pcLabel}
+                    )
+                  </label>
+                  <div className="flex flex-wrap gap-3">
+                    {stations.map((num) => {
+                      const isReserved = reservedStationNums.includes(num);
+                      const isSelected = selectedStations.includes(num);
+                      const toggleStation = () => {
+                        if (isReserved) return;
+                        setSelectedStations((prev) =>
+                          isSelected
+                            ? prev.filter((s) => s !== num)
+                            : [...prev, num].sort((a, b) => a - b),
+                        );
+                      };
+                      return (
+                        <button
+                          key={num}
+                          type="button"
+                          onClick={toggleStation}
+                          disabled={isReserved}
+                          title={
+                            isReserved
+                              ? t.reservation.stationReserved
+                              : t.reservation.stationAvailable
+                          }
+                          className={`${type === "ps5" ? "w-20 h-16" : "w-14 h-14"} relative rounded-xl border-2 font-bold text-lg transition flex items-center justify-center ${
+                            isReserved
+                              ? "border-foreground/30 bg-foreground/10 text-foreground/50 cursor-not-allowed"
+                              : isSelected
+                                ? "border-accent bg-accent text-white led-glow"
+                                : "border-accent/40 bg-foreground/5 text-foreground hover:border-accent/60"
+                          }`}
+                        >
+                          <span className="leading-none">{num}</span>
+                          {type === "ps5" && num === 5 && (
+                            <span className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[8px] font-normal text-accent/70 leading-tight text-center whitespace-nowrap">
+                              {t.games.steeringWheelTitle}
+                            </span>
+                          )}
+                          {isReserved && (
+                            <span className="text-[10px] font-normal uppercase">
+                              {t.reservation.stationReserved}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <p className="text-sm text-foreground/80">
+                {t.reservation.reservedSlotsFor}{" "}
+                <strong className="text-foreground">{displayDate}</strong>
+              </p>
+              <div className="grid gap-6 sm:grid-cols-2" ref={timeSectionRef}>
+                <div>
+                  <label
+                    htmlFor="time"
+                    className="block text-sm font-medium text-foreground/90 mb-2"
+                  >
+                    {t.reservation.time} <span className="text-accent">*</span>
+                  </label>
+                  {/*
                   Only allow starting times that are at least MIN_ADVANCE_HOURS in the future
                   when the selected date is today.
                 */}
-                {(() => {
-                  const now = new Date();
-                  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-                  const minStartHourToday = Math.ceil(
-                    (nowMinutes + MIN_ADVANCE_HOURS * 60) / 60
-                  );
-                  const isToday = displayDate === todayIso;
-                  return (
-                <select
-                  id="time"
-                  required
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
-                >
-                  <option value="">--</option>
-                  {HOURS.map((h) => {
-                    if (isToday && h < minStartHourToday) {
-                      return null;
-                    }
-                    const timeVal = `${String(h).padStart(2, "0")}:00`;
-                    return (
-                      <option key={h} value={timeVal}>
-                        {timeVal}
-                      </option>
+                  {(() => {
+                    const now = new Date();
+                    const nowMinutes = now.getHours() * 60 + now.getMinutes();
+                    const minStartHourToday = Math.ceil(
+                      (nowMinutes + MIN_ADVANCE_HOURS * 60) / 60,
                     );
-                  })}
-                </select>
-                  );
-                })()}
+                    const isToday = displayDate === todayIso;
+                    return (
+                      <select
+                        id="time"
+                        required
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                        className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
+                      >
+                        <option value="">--</option>
+                        {HOURS.map((h) => {
+                          if (isToday && h < minStartHourToday) {
+                            return null;
+                          }
+                          const timeVal = `${String(h).padStart(2, "0")}:00`;
+                          return (
+                            <option key={h} value={timeVal}>
+                              {timeVal}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    );
+                  })()}
+                </div>
+                <div>
+                  <label
+                    htmlFor="duration"
+                    className="block text-sm font-medium text-foreground/90 mb-2"
+                  >
+                    {t.reservation.duration}
+                  </label>
+                  <select
+                    id="duration"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
+                  >
+                    <option value="1">{t.reservation.duration1h}</option>
+                    <option value="2">{t.reservation.duration2h}</option>
+                    <option value="3">{t.reservation.duration3h}</option>
+                    <option value="4">{t.reservation.duration4h}</option>
+                    <option value="5">{t.reservation.duration5h}</option>
+                    <option value="6">{t.reservation.duration6h}</option>
+                    <option value="7">{t.reservation.duration7h}</option>
+                    <option value="8">{t.reservation.duration8h}</option>
+                  </select>
+                </div>
               </div>
-              <div>
-                <label htmlFor="duration" className="block text-sm font-medium text-foreground/90 mb-2">
-                  {t.reservation.duration}
-                </label>
-                <select
-                  id="duration"
-                  value={duration}
-                  onChange={(e) => setDuration(e.target.value)}
-                  className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
-                >
-                  <option value="1">{t.reservation.duration1h}</option>
-                  <option value="2">{t.reservation.duration2h}</option>
-                  <option value="3">{t.reservation.duration3h}</option>
-                  <option value="4">{t.reservation.duration4h}</option>
-                  <option value="5">{t.reservation.duration5h}</option>
-                  <option value="6">{t.reservation.duration6h}</option>
-                  <option value="7">{t.reservation.duration7h}</option>
-                  <option value="8">{t.reservation.duration8h}</option>
-                </select>
-              </div>
-            </div>
 
-            <div ref={nameSectionRef} className="rounded-xl border border-accent/40 bg-foreground/5 p-6 space-y-4">
-              <h3 className="font-semibold text-accent">{t.reservation.yourDetails}</h3>
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-foreground/90 mb-2">
-                  {t.reservation.yourName} <span className="text-accent">*</span>
+              <div
+                ref={nameSectionRef}
+                className="rounded-xl border border-accent/40 bg-foreground/5 p-6 space-y-4"
+              >
+                <h3 className="font-semibold text-accent">
+                  {t.reservation.yourDetails}
+                </h3>
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-foreground/90 mb-2"
+                  >
+                    {t.reservation.yourName}{" "}
+                    <span className="text-accent">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    required
+                    maxLength={MAX_NAME_LENGTH}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
+                  />
+                  <p className="text-xs text-foreground/60 mt-1">
+                    {name.length}/{MAX_NAME_LENGTH}{" "}
+                    {t.reservation.nameMaxLength ?? "characters max"}
+                  </p>
+                </div>
+                {submitError && (
+                  <p className="text-sm text-red-500" role="alert">
+                    {submitError}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-3 font-medium text-white transition-all hover:bg-(--accent-hover) led-glow disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+                >
+                  {isSubmitting && (
+                    <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                  )}
+                  <span>{t.reservation.submit}</span>
+                </button>
+              </div>
+
+              <div className="mt-6 flex flex-wrap items-center gap-4">
+                <label
+                  htmlFor="calendar-date"
+                  className="text-sm font-medium text-foreground/90"
+                >
+                  {t.reservation.reservedSlotsFor}
                 </label>
                 <input
-                  id="name"
-                  type="text"
-                  required
-                  maxLength={MAX_NAME_LENGTH}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
+                  id="calendar-date"
+                  type="date"
+                  min={new Date().toISOString().slice(0, 10)}
+                  value={displayDate}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="rounded-lg border border-accent/30 bg-background px-4 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
                 />
-                <p className="text-xs text-foreground/60 mt-1">
-                  {name.length}/{MAX_NAME_LENGTH} {t.reservation.nameMaxLength ?? "characters max"}
-                </p>
               </div>
-              {submitError && (
-                <p className="text-sm text-red-500" role="alert">{submitError}</p>
-              )}
-            </div>
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-3 font-medium text-white transition-all hover:bg-(--accent-hover) led-glow disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              <div
+                ref={reservedSlotsRef}
+                className="mt-4 rounded-xl border border-accent/40 bg-foreground/5 p-4"
               >
-                {isSubmitting && (
-                  <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                <h3 className="font-semibold text-accent led-text mb-1">
+                  {t.reservation.reservedSlots} — {displayDate}
+                </h3>
+                <p className="text-xs text-foreground/60 mb-4">
+                  {t.reservation.deleteReservationHint}
+                </p>
+                {isLoadingReservations ? (
+                  <p className="text-sm text-foreground/70 flex items-center gap-2">
+                    <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
+                    {"Loading reservations..."}
+                  </p>
+                ) : reservedForDate.length === 0 ? (
+                  <p className="text-sm text-foreground/70">
+                    {t.reservation.reservedSlotsEmpty}
+                  </p>
+                ) : (
+                  (() => {
+                    const { ps5, pc } = getDayCalendarGrid(reservations);
+                    return (
+                      <div className="space-y-6">
+                        <DayCalendarTable
+                          title={t.reservation.ps5Label}
+                          stationCount={5}
+                          grid={ps5}
+                          t={t}
+                          currentUserId={user?.uid}
+                          onDelete={handleDeleteReservation}
+                          deletingId={deletingId}
+                        />
+                        <DayCalendarTable
+                          title={t.reservation.pcLabel}
+                          stationCount={9}
+                          grid={pc}
+                          t={t}
+                          currentUserId={user?.uid}
+                          onDelete={handleDeleteReservation}
+                          deletingId={deletingId}
+                        />
+                      </div>
+                    );
+                  })()
                 )}
-                <span>{t.reservation.submit}</span>
-              </button>
-            </div>
+                {deleteError && (
+                  <p className="mt-3 text-sm text-red-500" role="alert">
+                    {deleteError}
+                  </p>
+                )}
+              </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-4">
-              <label htmlFor="calendar-date" className="text-sm font-medium text-foreground/90">
-                {t.reservation.reservedSlotsFor}
-              </label>
-              <input
-                id="calendar-date"
-                type="date"
-                min={new Date().toISOString().slice(0, 10)}
-                value={displayDate}
-                onChange={(e) => setDate(e.target.value)}
-                className="rounded-lg border border-accent/30 bg-background px-4 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
-              />
-            </div>
-
-            <div ref={reservedSlotsRef} className="mt-4 rounded-xl border border-accent/40 bg-foreground/5 p-4">
-              <h3 className="font-semibold text-accent led-text mb-1">
-                {t.reservation.reservedSlots} — {displayDate}
-              </h3>
-              <p className="text-xs text-foreground/60 mb-4">{t.reservation.deleteReservationHint}</p>
-              {isLoadingReservations ? (
-                <p className="text-sm text-foreground/70 flex items-center gap-2">
-                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
-                  {"Loading reservations..."}
-                </p>
-              ) : reservedForDate.length === 0 ? (
-                <p className="text-sm text-foreground/70">{t.reservation.reservedSlotsEmpty}</p>
-              ) : (() => {
-                const { ps5, pc } = getDayCalendarGrid(reservations);
-                return (
-                  <div className="space-y-6">
-                    <DayCalendarTable
-                      title={t.reservation.ps5Label}
-                      stationCount={5}
-                      grid={ps5}
-                      t={t}
-                      currentUserId={user?.uid}
-                      onDelete={handleDeleteReservation}
-                      deletingId={deletingId}
-                    />
-                    <DayCalendarTable
-                      title={t.reservation.pcLabel}
-                      stationCount={9}
-                      grid={pc}
-                      t={t}
-                      currentUserId={user?.uid}
-                      onDelete={handleDeleteReservation}
-                      deletingId={deletingId}
-                    />
-                  </div>
-                );
-              })()}
-              {deleteError && (
-                <p className="mt-3 text-sm text-red-500" role="alert">
-                  {deleteError}
-                </p>
-              )}
-            </div>
-
-            <div className="mt-6">
-              <Link
-                href={basePath || "/"}
-                className="text-sm text-foreground/70 hover:text-accent transition"
-              >
-                ← {t.reservation.back}
-              </Link>
-            </div>
-
-          </form>
+              <div className="mt-6">
+                <Link
+                  href={basePath || "/"}
+                  className="text-sm text-foreground/70 hover:text-accent transition"
+                >
+                  ← {t.reservation.back}
+                </Link>
+              </div>
+            </form>
           )}
         </div>
       </section>
 
       <footer className="border-t border-accent/20 px-4 py-6 sm:px-6">
         <div className="mx-auto max-w-6xl flex flex-col items-center gap-4">
-          <Link href={basePath || "/"} className="font-semibold text-accent led-text">
+          <Link
+            href={basePath || "/"}
+            className="font-semibold text-accent led-text"
+          >
             Peak Gaming
           </Link>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/50">
             <Link
-              href={basePath ? "/en/privacy-policy" : "/politica-de-confidentialitate"}
+              href={
+                basePath
+                  ? "/en/privacy-policy"
+                  : "/politica-de-confidentialitate"
+              }
               className="transition-colors hover:text-accent"
             >
               {t.footer.privacyPolicy}
@@ -950,7 +1078,13 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               >
                 <rect x="3" y="3" width="18" height="18" rx="5" />
                 <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                <circle
+                  cx="17.5"
+                  cy="6.5"
+                  r="1"
+                  fill="currentColor"
+                  stroke="none"
+                />
               </svg>
               Instagram
             </a>
