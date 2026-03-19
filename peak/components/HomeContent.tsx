@@ -294,6 +294,27 @@ export function HomeContent({ t, basePath = "" }: Props) {
             >
               {t.footer.termsOfService}
             </Link>
+            <span className="text-foreground/20">·</span>
+            <a
+              href="https://www.instagram.com/peak.gaming.suceava/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 transition-colors hover:text-accent"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              Instagram
+            </a>
           </div>
           <p className="text-sm text-foreground/60">
             © {new Date().getFullYear()} Peak Gaming. {t.footer.rights}
