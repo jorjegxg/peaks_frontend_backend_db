@@ -794,6 +794,43 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               />
             </div>
 
+            <div ref={nameSectionRef} className="rounded-xl border border-accent/40 bg-foreground/5 p-6 space-y-4">
+              <h3 className="font-semibold text-accent">{t.reservation.yourDetails}</h3>
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-foreground/90 mb-2">
+                  {t.reservation.yourName} <span className="text-accent">*</span>
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  required
+                  maxLength={MAX_NAME_LENGTH}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
+                />
+                <p className="text-xs text-foreground/60 mt-1">
+                  {name.length}/{MAX_NAME_LENGTH} {t.reservation.nameMaxLength ?? "characters max"}
+                </p>
+              </div>
+              {submitError && (
+                <p className="text-sm text-red-500" role="alert">{submitError}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-end">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-3 font-medium text-white transition-all hover:bg-(--accent-hover) led-glow disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
+              >
+                {isSubmitting && (
+                  <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                )}
+                <span>{t.reservation.submit}</span>
+              </button>
+            </div>
+
             <div ref={reservedSlotsRef} className="mt-4 rounded-xl border border-accent/40 bg-foreground/5 p-4">
               <h3 className="font-semibold text-accent led-text mb-4">
                 {t.reservation.reservedSlots} — {displayDate}
@@ -837,48 +874,15 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               )}
             </div>
 
-            <div ref={nameSectionRef} className="rounded-xl border border-accent/40 bg-foreground/5 p-6 space-y-4">
-              <h3 className="font-semibold text-accent">{t.contact.sendMessage}</h3>
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-foreground/90 mb-2">
-                  {t.reservation.yourName} <span className="text-accent">*</span>
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  required
-                  maxLength={MAX_NAME_LENGTH}
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
-                />
-                <p className="text-xs text-foreground/60 mt-1">
-                  {name.length}/{MAX_NAME_LENGTH} {t.reservation.nameMaxLength ?? "characters max"}
-                </p>
-              </div>
-              {submitError && (
-                <p className="text-sm text-red-500" role="alert">{submitError}</p>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="mt-6">
               <Link
                 href={basePath || "/"}
                 className="text-sm text-foreground/70 hover:text-accent transition"
               >
                 ← {t.reservation.back}
               </Link>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-3 font-medium text-white transition-all hover:bg-(--accent-hover) led-glow disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background"
-              >
-                {isSubmitting && (
-                  <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                )}
-                <span>{t.reservation.submit}</span>
-              </button>
             </div>
+
           </form>
           )}
         </div>
