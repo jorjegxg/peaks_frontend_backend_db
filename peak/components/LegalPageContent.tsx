@@ -55,13 +55,34 @@ export function LegalPageContent({ t, page, basePath = "" }: Props) {
             ))}
           </div>
 
-          <div className="mt-12 border-t border-accent/20 pt-6 text-sm text-foreground/50">
-            <p>
-              © {new Date().getFullYear()} Peak Gaming. {t.footer.rights}
-            </p>
-          </div>
         </div>
       </section>
+
+      <footer className="border-t border-accent/20 px-4 py-6 sm:px-6">
+        <div className="mx-auto max-w-6xl flex flex-col items-center gap-4">
+          <Link href={home} className="font-semibold text-accent led-text">
+            Peak Gaming
+          </Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/50">
+            <Link
+              href={basePath ? "/en/privacy-policy" : "/politica-de-confidentialitate"}
+              className="transition-colors hover:text-accent"
+            >
+              {t.footer.privacyPolicy}
+            </Link>
+            <span className="text-foreground/20">·</span>
+            <Link
+              href={basePath ? "/en/terms-of-service" : "/termeni-si-conditii"}
+              className="transition-colors hover:text-accent"
+            >
+              {t.footer.termsOfService}
+            </Link>
+          </div>
+          <p className="text-sm text-foreground/60">
+            © {new Date().getFullYear()} Peak Gaming. {t.footer.rights}
+          </p>
+        </div>
+      </footer>
     </main>
   );
 }
