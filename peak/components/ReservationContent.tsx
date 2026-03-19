@@ -814,13 +814,13 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                           }`}
                         >
                           <span className="leading-none">{num}</span>
-                          {type === "ps5" && num === 5 && (
-                            <span className="absolute bottom-1 left-1/2 -translate-x-1/2 text-[8px] font-normal text-accent/70 leading-tight text-center whitespace-nowrap">
+                          {type === "ps5" && num === 5 && !isReserved && (
+                            <span className="absolute bottom-1 left-1/2 -translate-x-1/2 rounded bg-accent/15 px-1 py-0.5 text-[8px] font-medium text-accent/80 leading-none text-center whitespace-nowrap">
                               {t.games.steeringWheelTitle}
                             </span>
                           )}
                           {isReserved && (
-                            <span className="text-[10px] font-normal uppercase">
+                            <span className="absolute bottom-1 left-1/2 -translate-x-1/2 rounded bg-foreground/20 px-1 py-0.5 text-[9px] font-medium uppercase tracking-wide text-foreground/80 leading-none whitespace-nowrap">
                               {t.reservation.stationReserved}
                             </span>
                           )}
