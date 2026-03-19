@@ -158,6 +158,8 @@
     "signInWithGoogle": "Conectare cu Google",
     "verifyPhoneToComplete": "Introdu numărul de telefon și îți trimitem un cod pentru verificare.",
     "sendCode": "Trimite codul",
+    "codeWillBeSentTo": "Codul va fi trimis la {number}",
+    "codeSentTo": "Codul a fost trimis la {number}",
     "enterCode": "Introdu codul din 6 cifre",
     "verifyCode": "Verifică",
     "changeNumber": "Schimbă numărul",

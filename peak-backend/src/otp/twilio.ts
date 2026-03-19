@@ -16,6 +16,8 @@ export async function sendOtpSms(to: string, code: string): Promise<void> {
     );
   }
   const body = `Your verification code is: ${code}. It expires in 5 minutes.`;
+  console.log("Sending SMS to", to, "with code", code);
+
   await client.messages.create({
     body,
     from: fromNumber,

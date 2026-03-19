@@ -517,6 +517,11 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         className="w-full rounded-lg border border-accent/30 bg-background px-4 py-3 text-foreground placeholder:text-foreground/50 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
                       />
                       <p className="text-xs text-foreground/60 mt-1">{t.reservation.phoneFormatHint}</p>
+                      {signInPhone.trim() && (
+                        <p className="text-xs text-foreground/70 mt-2">
+                          {t.reservation.codeWillBeSentTo.replace("{number}", toE164(signInPhone))}
+                        </p>
+                      )}
                     </div>
                     <button
                       type="button"
@@ -533,6 +538,9 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                 ) : (
                   <>
                     <div className="w-full text-left">
+                      <p className="text-xs text-foreground/70 mb-2">
+                        {t.reservation.codeSentTo.replace("{number}", toE164(signInPhone))}
+                      </p>
                       <label htmlFor="verify-otp" className="block text-sm font-medium text-foreground/90 mb-1">
                         {t.reservation.enterCode}
                       </label>
