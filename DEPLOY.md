@@ -201,12 +201,77 @@ docker compose up -d --build
 
 ---
 
+## 10. Automated deployment (CI/CD)
+
+The repo includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that deploys automatically on every push to `main`. It SSHs into the VPS, pulls the latest code, and rebuilds the Docker containers.
+
+### One-time server setup
+
+The project must be cloned on the server so `git pull` works:
+
+```bash
+ssh root@YOUR_SERVER_IP
+cd /opt
+git clone https://github.com/jorjegxg/peaks_frontend_backend_db.git peak
+cd peak
+cp .env.example .env
+nano .env   # fill in real values
+docker compose up -d --build
+```
+
+### GitHub repository secrets
+
+Go to **GitHub → repo → Settings → Secrets and variables → Actions** and add these secrets:
+
+| Secret name        | Value                                                    |
+| ------------------ | -------------------------------------------------------- |
+| `SERVER_HOST`      | VPS IP address (e.g. `95.216.x.x`)                      |
+| `SERVER_USER`      | SSH user (e.g. `root` or `deploy`)                       |
+| `SERVER_SSH_KEY`   | Private SSH key (see below)                              |
+| `SERVER_PORT`      | SSH port (optional, default `22`)                        |
+
+### Generate a deploy SSH key
+
+On your **local machine** (or anywhere), generate a key pair dedicated to deployment:
+
+```bash
+ssh-keygen -t ed25519 -C "github-deploy" -f ~/.ssh/deploy_peak -N ""
+```
+
+Add the **public** key to the server:
+
+```bash
+ssh-copy-id -i ~/.ssh/deploy_peak.pub root@YOUR_SERVER_IP
+```
+
+Copy the **private** key content and paste it as the `SERVER_SSH_KEY` secret in GitHub:
+
+```bash
+cat ~/.ssh/deploy_peak.pub   # → server authorized_keys (done above)
+cat ~/.ssh/deploy_peak        # → GitHub secret SERVER_SSH_KEY
+```
+
+### How it works
+
+1. You push to `main` (or manually trigger the workflow).
+2. GitHub Actions SSHs into the VPS.
+3. Runs `git pull origin main` to fetch the latest code.
+4. Runs `docker compose up -d --build` to rebuild and restart containers.
+5. Cleans up old Docker images.
+
+You can also trigger it manually from **GitHub → Actions → Deploy to VPS → Run workflow**.
+
+---
+
 ## Checklist
 
 - [ ] VPS created, SSH key added, firewall allows 22, 80, 443.
 - [ ] Docker and Docker Compose installed.
-- [ ] `peak-backend` code and `.env` on server; `docker compose up -d` runs backend + DB.
+- [ ] Repo cloned at `/opt/peak` on the server, `.env` configured.
+- [ ] `docker compose up -d --build` runs db + backend + frontend.
 - [ ] Nginx reverse proxy for the API (and optionally frontend).
 - [ ] SSL with Certbot for your domain.
 - [ ] Frontend: either on same VPS with `NEXT_PUBLIC_PEAK_BACKEND_URL=https://YOUR_DOMAIN`, or on Vercel with that env var.
 - [ ] CORS origin set if frontend and API are on different domains.
+- [ ] GitHub secrets set (`SERVER_HOST`, `SERVER_USER`, `SERVER_SSH_KEY`).
+- [ ] Push to `main` triggers automatic deployment.
