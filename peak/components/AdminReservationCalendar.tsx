@@ -38,6 +38,11 @@ function CalendarTable({ title, stationCount, grid }: CalendarTableProps) {
                 className="w-[180px] px-2 py-2 text-left font-medium text-foreground/80"
               >
                 Station #{station}
+                {title === "PS5" && station === 5 && (
+                  <div className="text-xs text-accent/70 font-normal">
+                    volan
+                  </div>
+                )}
               </th>
             ))}
           </tr>

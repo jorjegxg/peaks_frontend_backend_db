@@ -9,7 +9,7 @@ import {
 } from "./store";
 
 const router = Router();
-const MAX_NAME_LENGTH = 50;
+const MAX_NAME_LENGTH = 15;
 const MIN_ADVANCE_HOURS = 1;
 
 function getBearerToken(req: Request): string | null {

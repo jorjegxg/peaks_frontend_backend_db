@@ -53,6 +53,11 @@ function DayCalendarTable({
             {stations.map((s) => (
               <th key={s} className="py-2 px-1 text-center font-medium text-foreground/80 w-20">
                 #{s}
+                {stationCount === 5 && s === 5 && (
+                  <div className="text-[10px] text-accent/70 font-normal">
+                    {t.games.steeringWheelTitle}
+                  </div>
+                )}
               </th>
             ))}
           </tr>
@@ -709,7 +714,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                             ? t.reservation.stationReserved
                             : t.reservation.stationAvailable
                         }
-                        className={`w-14 h-14 rounded-xl border-2 font-bold text-lg transition flex flex-col items-center justify-center gap-0.5 ${
+                        className={`${type === "ps5" && num === 5 ? "w-20 h-16" : "w-14 h-14"} rounded-xl border-2 font-bold text-lg transition flex flex-col items-center justify-center gap-0.5 ${
                           isReserved
                             ? "border-foreground/30 bg-foreground/10 text-foreground/50 cursor-not-allowed"
                             : isSelected
@@ -718,6 +723,11 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         }`}
                       >
                         <span>{num}</span>
+                        {type === "ps5" && num === 5 && (
+                          <span className="text-[9px] font-normal text-accent/70 leading-tight">
+                            {t.games.steeringWheelTitle}
+                          </span>
+                        )}
                         {isReserved && (
                           <span className="text-[10px] font-normal uppercase">
                             {t.reservation.stationReserved}

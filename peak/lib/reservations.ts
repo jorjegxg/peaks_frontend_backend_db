@@ -1,6 +1,6 @@
 import { apiFetch, apiFetchWithAuth } from "./api";
 
-export const MAX_NAME_LENGTH = 50;
+export const MAX_NAME_LENGTH = 15;
 export const MIN_ADVANCE_HOURS = 1;
 
 export type Reservation = {
