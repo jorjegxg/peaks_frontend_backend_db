@@ -273,7 +273,14 @@ export function HomeContent({ t, basePath = "" }: Props) {
 
       <footer className="border-t border-accent/20 px-4 py-6 sm:px-6">
         <div className="mx-auto max-w-6xl flex flex-col items-center gap-4">
-          <span className="font-semibold text-accent led-text">
+          <span className="inline-flex items-center gap-2 font-semibold text-accent led-text">
+            <Image
+              src="/peak-logo.jpeg"
+              alt="Peak Gaming logo"
+              width={24}
+              height={24}
+              className="h-6 w-6 rounded-md object-cover"
+            />
             Peak Gaming
           </span>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/50">

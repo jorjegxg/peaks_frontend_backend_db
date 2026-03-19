@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getTranslations, type Locale } from "@/lib/translations";
@@ -47,8 +48,16 @@ export function Header() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
         <Link
           href={base || "/"}
-          className="text-lg font-bold tracking-tight text-accent led-text sm:text-xl shrink-0"
+          className="inline-flex items-center gap-2 text-lg font-bold tracking-tight text-accent led-text sm:text-xl shrink-0"
         >
+          <Image
+            src="/peak-logo.jpeg"
+            alt="Peak Gaming logo"
+            width={28}
+            height={28}
+            className="h-7 w-7 rounded-md object-cover"
+            priority
+          />
           Peak Gaming
         </Link>
 

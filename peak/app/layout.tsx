@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Peak Gaming | Net Café",
   description: "Peak Gaming net café — PS5, PC-uri gaming, prețuri bune. Locul tău de gaming.",
+  icons: {
+    icon: "/peak-logo.jpeg",
+    shortcut: "/peak-logo.jpeg",
+    apple: "/peak-logo.jpeg",
+  },
 };
 
 export default function RootLayout({

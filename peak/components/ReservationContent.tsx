@@ -1039,8 +1039,15 @@ export function ReservationContent({ t, basePath = "" }: Props) {
         <div className="mx-auto max-w-6xl flex flex-col items-center gap-4">
           <Link
             href={basePath || "/"}
-            className="font-semibold text-accent led-text"
+            className="inline-flex items-center gap-2 font-semibold text-accent led-text"
           >
+            <Image
+              src="/peak-logo.jpeg"
+              alt="Peak Gaming logo"
+              width={24}
+              height={24}
+              className="h-6 w-6 rounded-md object-cover"
+            />
             Peak Gaming
           </Link>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/50">
