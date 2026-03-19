@@ -196,6 +196,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
   const [deleteError, setDeleteError] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [phoneVerified, setPhoneVerified] = useState(false);
+  const [showChooseTypeNotification, setShowChooseTypeNotification] = useState(false);
 
   const typeSectionRef = useRef<HTMLDivElement | null>(null);
   const timeSectionRef = useRef<HTMLDivElement | null>(null);
@@ -354,6 +355,12 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     return () => clearTimeout(timer);
   }, [phoneVerified]);
 
+  useEffect(() => {
+    if (!showChooseTypeNotification) return;
+    const timer = setTimeout(() => setShowChooseTypeNotification(false), 4500);
+    return () => clearTimeout(timer);
+  }, [showChooseTypeNotification]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError("");
@@ -364,6 +371,7 @@ export function ReservationContent({ t, basePath = "" }: Props) {
     if (!type) {
       setSubmitError(t.reservation.validation.chooseType);
       setShowTypeHint(true);
+      setShowChooseTypeNotification(true);
       scrollToRef(typeSectionRef);
       return;
     }
@@ -603,6 +611,12 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                 ✓
               </span>
               <span>{t.reservation.phoneVerified ?? "Phone verified — your account is ready!"}</span>
+            </div>
+          )}
+
+          {showChooseTypeNotification && (
+            <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-xl border border-red-500/70 bg-red-600/95 px-5 py-3 text-sm font-semibold text-white shadow-lg animate-[fadeIn_0.3s_ease-out]">
+              Alege mai întâi PS5 sau PC,
             </div>
           )}
 

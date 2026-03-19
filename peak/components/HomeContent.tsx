@@ -2,12 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Translations } from "@/lib/translations";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1511882150382-421056c89033?w=1920&q=80";
+const HERO_IMAGE = "/coffe.jpg";
 const PS5_IMAGE = "/playstation.jpg";
 const PC_IMAGE = "/pc.jpg";
-const CAFE_IMAGE =
-  "https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=800&q=80";
+const CAFE_IMAGE = "/warzone.jpg";
 const STEERING_WHEEL_IMAGE = "/steering-weel.jpg";
 
 // Game images from public/games – only games that have files in this folder
@@ -276,7 +274,11 @@ export function HomeContent({ t, basePath = "" }: Props) {
           </span>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-foreground/50">
             <Link
-              href={basePath ? "/en/privacy-policy" : "/politica-de-confidentialitate"}
+              href={
+                basePath
+                  ? "/en/privacy-policy"
+                  : "/politica-de-confidentialitate"
+              }
               className="transition-colors hover:text-accent"
             >
               {t.footer.privacyPolicy}
