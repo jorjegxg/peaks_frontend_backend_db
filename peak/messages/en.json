@@ -143,6 +143,7 @@
     "required": "required",
     "back": "Back",
     "reservedSlots": "Existing reservations",
+    "deleteReservationHint": "Click ✕ next to your reservation to delete it.",
     "reservedSlotsFor": "Reservations for",
     "reservedSlotsEmpty": "No reservations for this date.",
     "stationReserved": "Reserved",

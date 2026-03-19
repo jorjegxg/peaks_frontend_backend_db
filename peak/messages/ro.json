@@ -143,6 +143,7 @@
     "required": "obligatoriu",
     "back": "Înapoi",
     "reservedSlots": "Rezervări existente",
+    "deleteReservationHint": "Apasă ✕ lângă rezervarea ta pentru a o șterge.",
     "reservedSlotsFor": "Rezervări pentru",
     "reservedSlotsEmpty": "Nicio rezervare pentru această dată.",
     "stationReserved": "Rezervat",

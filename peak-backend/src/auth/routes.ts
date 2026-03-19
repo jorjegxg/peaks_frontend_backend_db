@@ -32,7 +32,7 @@ router.post("/firebase", async (req: Request, res: Response) => {
     const { uid, email, name } = await verifyFirebaseIdToken(idToken);
     const profile = await getOrCreateUser(uid, email ?? null, name ?? null);
     const token = createSessionToken({ sub: uid, email, name });
-    res.json({ token, profile });
+    res.json({ token, profile: { ...profile, uid } });
   } catch (err) {
     console.error("[auth] POST /api/auth/firebase failed:", err);
     return res.status(401).json({

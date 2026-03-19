@@ -42,8 +42,22 @@ type UserProfile = {
   displayName: string | null;
 };
 
-async function fetchUserProfile(token: string): Promise<UserProfile> {
-  return apiFetchWithAuth<UserProfile>("/api/users/me", token);
+type UserProfileResponse = UserProfile & { uid?: string };
+
+function getSubFromJwt(token: string): string {
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) return "";
+    const decoded = JSON.parse(atob(payload));
+    return decoded.sub ?? "";
+  } catch {
+    return "";
+  }
+}
+
+async function fetchUserProfile(token: string): Promise<UserProfile & { uid: string }> {
+  const res = await apiFetchWithAuth<UserProfileResponse>("/api/users/me", token);
+  return { ...res, uid: res.uid || getSubFromJwt(token) };
 }
 
 function getStoredToken(): string | null {
@@ -69,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const profile = await fetchUserProfile(token);
       setUser({
-        uid: token,
+        uid: profile.uid,
         email: profile.email,
         displayName: profile.displayName,
         phoneNumber: profile.phone,
@@ -111,8 +125,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       );
       setStoredToken(session.token);
+      const uid = (session.profile as UserProfile & { uid?: string }).uid || getSubFromJwt(session.token);
       setUser({
-        uid: session.token,
+        uid,
         email: session.profile.email,
         displayName: session.profile.displayName,
         phoneNumber: session.profile.phone,

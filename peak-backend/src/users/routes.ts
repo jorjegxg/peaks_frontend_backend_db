@@ -29,7 +29,7 @@ router.get("/me", async (req: Request, res: Response) => {
   try {
     const { sub, email, name } = verifySessionToken(token);
     const profile = await getOrCreateUser(sub, email ?? null, name ?? null);
-    res.json(profile);
+    res.json({ ...profile, uid: sub });
   } catch (err) {
     console.error("[users] GET /me failed:", err);
     return res.status(401).json({ errorCode: "AUTH_INVALID_TOKEN", error: "Invalid or expired token" });

@@ -65,14 +65,15 @@ function DayCalendarTable({
               </td>
               {stations.map((s) => {
                 const r = grid[h][s];
-                const isOwn = !!(r && currentUserId && r.userId === currentUserId);
+                const resUserId = r?.userId ?? (r as { user_id?: string })?.user_id;
+                const isOwn = !!(r && currentUserId && resUserId === currentUserId);
                 const isDeleting = !!(r && deletingId === r.id);
                 return (
                   <td key={s} className="py-1.5 px-1 text-center">
                     {r ? (
-                      <div className="inline-flex max-w-full items-center gap-0.5 rounded overflow-hidden">
+                      <div className="inline-flex max-w-full items-center gap-1 rounded overflow-hidden">
                         <span
-                          className="inline-block max-w-full truncate rounded-l bg-accent/20 px-1.5 py-0.5 text-foreground text-xs"
+                          className="inline-block max-w-full truncate rounded-l bg-accent/20 px-2 py-1 text-foreground text-xs"
                           title={r.name}
                         >
                           {r.name}
@@ -82,7 +83,7 @@ function DayCalendarTable({
                             type="button"
                             disabled={isDeleting}
                             onClick={() => onDelete(r)}
-                            className="rounded-r bg-red-600/80 px-1 py-0.5 text-white text-[10px] hover:bg-red-500 disabled:opacity-60 shrink-0"
+                            className="rounded-r bg-red-600 px-2 py-1 text-white text-xs font-medium hover:bg-red-500 disabled:opacity-60 shrink-0 min-w-[24px]"
                             title="Delete your reservation"
                           >
                             {isDeleting ? "…" : "✕"}
@@ -780,20 +781,6 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               </div>
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-4">
-              <label htmlFor="calendar-date" className="text-sm font-medium text-foreground/90">
-                {t.reservation.reservedSlotsFor}
-              </label>
-              <input
-                id="calendar-date"
-                type="date"
-                min={new Date().toISOString().slice(0, 10)}
-                value={displayDate}
-                onChange={(e) => setDate(e.target.value)}
-                className="rounded-lg border border-accent/30 bg-background px-4 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
-              />
-            </div>
-
             <div ref={nameSectionRef} className="rounded-xl border border-accent/40 bg-foreground/5 p-6 space-y-4">
               <h3 className="font-semibold text-accent">{t.reservation.yourDetails}</h3>
               <div>
@@ -831,10 +818,25 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               </button>
             </div>
 
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <label htmlFor="calendar-date" className="text-sm font-medium text-foreground/90">
+                {t.reservation.reservedSlotsFor}
+              </label>
+              <input
+                id="calendar-date"
+                type="date"
+                min={new Date().toISOString().slice(0, 10)}
+                value={displayDate}
+                onChange={(e) => setDate(e.target.value)}
+                className="rounded-lg border border-accent/30 bg-background px-4 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
+              />
+            </div>
+
             <div ref={reservedSlotsRef} className="mt-4 rounded-xl border border-accent/40 bg-foreground/5 p-4">
-              <h3 className="font-semibold text-accent led-text mb-4">
+              <h3 className="font-semibold text-accent led-text mb-1">
                 {t.reservation.reservedSlots} — {displayDate}
               </h3>
+              <p className="text-xs text-foreground/60 mb-4">{t.reservation.deleteReservationHint}</p>
               {isLoadingReservations ? (
                 <p className="text-sm text-foreground/70 flex items-center gap-2">
                   <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
