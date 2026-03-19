@@ -597,63 +597,6 @@ export function ReservationContent({ t, basePath = "" }: Props) {
             </div>
           )}
 
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <label htmlFor="calendar-date" className="text-sm font-medium text-foreground/90">
-              {t.reservation.reservedSlotsFor}
-            </label>
-            <input
-              id="calendar-date"
-              type="date"
-              min={new Date().toISOString().slice(0, 10)}
-              value={displayDate}
-              onChange={(e) => setDate(e.target.value)}
-              className="rounded-lg border border-accent/30 bg-background px-4 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
-            />
-          </div>
-
-          <div ref={reservedSlotsRef} className="mt-4 rounded-xl border border-accent/40 bg-foreground/5 p-4">
-            <h3 className="font-semibold text-accent led-text mb-4">
-              {t.reservation.reservedSlots} — {displayDate}
-            </h3>
-            {isLoadingReservations ? (
-              <p className="text-sm text-foreground/70 flex items-center gap-2">
-                <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
-                {"Loading reservations..."}
-              </p>
-            ) : reservedForDate.length === 0 ? (
-              <p className="text-sm text-foreground/70">{t.reservation.reservedSlotsEmpty}</p>
-            ) : (() => {
-              const { ps5, pc } = getDayCalendarGrid(reservations);
-              return (
-                <div className="space-y-6">
-                  <DayCalendarTable
-                    title={t.reservation.ps5Label}
-                    stationCount={5}
-                    grid={ps5}
-                    t={t}
-                    currentUserId={user?.uid}
-                    onDelete={handleDeleteReservation}
-                    deletingId={deletingId}
-                  />
-                  <DayCalendarTable
-                    title={t.reservation.pcLabel}
-                    stationCount={9}
-                    grid={pc}
-                    t={t}
-                    currentUserId={user?.uid}
-                    onDelete={handleDeleteReservation}
-                    deletingId={deletingId}
-                  />
-                </div>
-              );
-            })()}
-            {deleteError && (
-              <p className="mt-3 text-sm text-red-500" role="alert">
-                {deleteError}
-              </p>
-            )}
-          </div>
-
           {user && !user.needsPhoneVerification && (
           <form onSubmit={handleSubmit} className="mt-6 space-y-6">
             <div ref={typeSectionRef}>
@@ -827,6 +770,63 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                   <option value="8">{t.reservation.duration8h}</option>
                 </select>
               </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <label htmlFor="calendar-date" className="text-sm font-medium text-foreground/90">
+                {t.reservation.reservedSlotsFor}
+              </label>
+              <input
+                id="calendar-date"
+                type="date"
+                min={new Date().toISOString().slice(0, 10)}
+                value={displayDate}
+                onChange={(e) => setDate(e.target.value)}
+                className="rounded-lg border border-accent/30 bg-background px-4 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
+              />
+            </div>
+
+            <div ref={reservedSlotsRef} className="mt-4 rounded-xl border border-accent/40 bg-foreground/5 p-4">
+              <h3 className="font-semibold text-accent led-text mb-4">
+                {t.reservation.reservedSlots} — {displayDate}
+              </h3>
+              {isLoadingReservations ? (
+                <p className="text-sm text-foreground/70 flex items-center gap-2">
+                  <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-accent/30 border-t-accent" />
+                  {"Loading reservations..."}
+                </p>
+              ) : reservedForDate.length === 0 ? (
+                <p className="text-sm text-foreground/70">{t.reservation.reservedSlotsEmpty}</p>
+              ) : (() => {
+                const { ps5, pc } = getDayCalendarGrid(reservations);
+                return (
+                  <div className="space-y-6">
+                    <DayCalendarTable
+                      title={t.reservation.ps5Label}
+                      stationCount={5}
+                      grid={ps5}
+                      t={t}
+                      currentUserId={user?.uid}
+                      onDelete={handleDeleteReservation}
+                      deletingId={deletingId}
+                    />
+                    <DayCalendarTable
+                      title={t.reservation.pcLabel}
+                      stationCount={9}
+                      grid={pc}
+                      t={t}
+                      currentUserId={user?.uid}
+                      onDelete={handleDeleteReservation}
+                      deletingId={deletingId}
+                    />
+                  </div>
+                );
+              })()}
+              {deleteError && (
+                <p className="mt-3 text-sm text-red-500" role="alert">
+                  {deleteError}
+                </p>
+              )}
             </div>
 
             <div ref={nameSectionRef} className="rounded-xl border border-accent/40 bg-foreground/5 p-6 space-y-4">
