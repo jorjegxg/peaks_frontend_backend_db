@@ -92,7 +92,10 @@ export function HomeContent({ t, basePath = "" }: Props) {
           <p className="mt-2 text-foreground/70">{t.games.subtitle}</p>
 
           <div className="mt-6 grid gap-6 sm:grid-cols-3">
-            <div className="group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle">
+            <Link
+              href={basePath ? "/en/reservation" : "/rezervare"}
+              className="group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle block"
+            >
               <div className="relative aspect-4/3">
                 <Image
                   src={PS5_IMAGE}
@@ -112,8 +115,11 @@ export function HomeContent({ t, basePath = "" }: Props) {
                 </h3>
                 <p className="mt-2 text-foreground/80">{t.games.ps5Desc}</p>
               </div>
-            </div>
-            <div className="group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle">
+            </Link>
+            <Link
+              href={basePath ? "/en/reservation" : "/rezervare"}
+              className="group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle block"
+            >
               <div className="relative aspect-4/3">
                 <Image
                   src={PC_IMAGE}
@@ -133,10 +139,11 @@ export function HomeContent({ t, basePath = "" }: Props) {
                 </h3>
                 <p className="mt-2 text-foreground/80">{t.games.pcsDesc}</p>
               </div>
-            </div>
-            <div
+            </Link>
+            <Link
+              href={basePath ? "/en/reservation" : "/rezervare"}
               id="steering-wheel"
-              className="scroll-mt-20 group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle"
+              className="scroll-mt-20 group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle block"
             >
               <div className="relative aspect-4/3">
                 <Image
@@ -159,7 +166,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   {t.games.steeringWheel}
                 </p>
               </div>
-            </div>
+            </Link>
           </div>
 
           <div className="mt-8">
