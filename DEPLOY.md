@@ -278,3 +278,4 @@ You can also trigger it manually from **GitHub → Actions → Deploy to VPS →
 
 
 test commit
+test commit2
