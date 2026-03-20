@@ -38,6 +38,7 @@ export function Header() {
     { href: `${home}#about`, label: t.nav.about },
     { href: base ? "/en/prices" : "/preturi", label: t.nav.prices },
     { href: base ? "/en/reservation" : "/rezervare", label: t.nav.reservation },
+    { href: base ? "/en/contact" : "/contact", label: t.nav.contact },
   ] as const;
 
   const linkClass =

@@ -134,6 +134,20 @@ export function PricesContent({ t, basePath = "" }: Props) {
             >
               {t.footer.termsOfService}
             </Link>
+            <span className="text-foreground/20">·</span>
+            <Link
+              href={basePath ? "/en/contact" : "/contact"}
+              className="transition-colors hover:text-accent"
+            >
+              {t.nav.contact}
+            </Link>
+            <span className="text-foreground/20">·</span>
+            <Link
+              href="/internet-cafe-suceava"
+              className="transition-colors hover:text-accent"
+            >
+              Internet Cafe Suceava
+            </Link>
           </div>
           <p className="text-sm text-foreground/60">
             © {new Date().getFullYear()} Peak Gaming. {t.footer.rights}

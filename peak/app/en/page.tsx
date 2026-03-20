@@ -3,8 +3,16 @@ import { getTranslations } from "@/lib/translations";
 import { HomeContent } from "@/components/HomeContent";
 
 export const metadata: Metadata = {
-  title: "Peak Gaming | Net Café",
-  description: "Peak Gaming net café — PS5, gaming PCs, great prices. Your spot to play.",
+  title: "Internet Cafe Suceava | Peak Gaming",
+  description:
+    "Internet cafe in Suceava with PS5 and high-end gaming PCs. Fast online booking and daily schedule 12:00-24:00.",
+  alternates: {
+    canonical: "/en",
+    languages: {
+      ro: "/",
+      en: "/en",
+    },
+  },
 };
 
 export default function EnHome() {

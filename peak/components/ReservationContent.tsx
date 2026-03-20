@@ -1069,6 +1069,20 @@ export function ReservationContent({ t, basePath = "" }: Props) {
               {t.footer.termsOfService}
             </Link>
             <span className="text-foreground/20">·</span>
+            <Link
+              href={basePath ? "/en/contact" : "/contact"}
+              className="transition-colors hover:text-accent"
+            >
+              {t.nav.contact}
+            </Link>
+            <span className="text-foreground/20">·</span>
+            <Link
+              href="/playstation-suceava"
+              className="transition-colors hover:text-accent"
+            >
+              PlayStation Suceava
+            </Link>
+            <span className="text-foreground/20">·</span>
             <a
               href="https://www.instagram.com/peak.gaming.suceava/"
               target="_blank"

@@ -271,6 +271,34 @@ export function HomeContent({ t, basePath = "" }: Props) {
         </div>
       </section>
 
+      <section className="px-4 pb-8 sm:px-6 sm:pb-12">
+        <div className="mx-auto max-w-6xl rounded-xl border border-accent/40 bg-foreground/5 p-5">
+          <h2 className="text-xl font-semibold text-foreground">
+            {basePath ? "Popular local pages" : "Pagini locale populare"}
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <Link
+              href={basePath ? "/en/contact" : "/contact"}
+              className="rounded-lg border border-accent/50 px-3 py-2 text-sm text-accent"
+            >
+              {basePath ? "Contact in Suceava" : "Contact in Suceava"}
+            </Link>
+            <Link
+              href="/internet-cafe-suceava"
+              className="rounded-lg border border-accent/50 px-3 py-2 text-sm text-accent"
+            >
+              Internet Cafe Suceava
+            </Link>
+            <Link
+              href="/playstation-suceava"
+              className="rounded-lg border border-accent/50 px-3 py-2 text-sm text-accent"
+            >
+              PlayStation Suceava
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-accent/20 px-4 py-6 sm:px-6">
         <div className="mx-auto max-w-6xl flex flex-col items-center gap-4">
           <span className="inline-flex items-center gap-2 font-semibold text-accent led-text">
@@ -300,6 +328,13 @@ export function HomeContent({ t, basePath = "" }: Props) {
               className="transition-colors hover:text-accent"
             >
               {t.footer.termsOfService}
+            </Link>
+            <span className="text-foreground/20">·</span>
+            <Link
+              href={basePath ? "/en/contact" : "/contact"}
+              className="transition-colors hover:text-accent"
+            >
+              {t.nav.contact}
             </Link>
             <span className="text-foreground/20">·</span>
             <a
