@@ -10,6 +10,7 @@ import {
 } from "@/lib/reservations";
 
 const ADMIN_PASSWORD = "654321";
+const ADMIN_PASSWORD_STORAGE_KEY = "peak_admin_saved_password";
 
 type CalendarTableProps = {
   title: string;
@@ -100,8 +101,23 @@ export function AdminReservationCalendar() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberPassword, setRememberPassword] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [authError, setAuthError] = useState("");
+
+  useEffect(() => {
+    try {
+      const savedPassword = window.localStorage.getItem(
+        ADMIN_PASSWORD_STORAGE_KEY,
+      );
+      if (savedPassword) {
+        setPassword(savedPassword);
+        setRememberPassword(true);
+      }
+    } catch {
+      // localStorage can be unavailable in private contexts
+    }
+  }, []);
 
   useEffect(() => {
     if (!isUnlocked) return;
@@ -130,9 +146,20 @@ export function AdminReservationCalendar() {
       setAuthError("Wrong password");
       return;
     }
+    try {
+      if (rememberPassword) {
+        window.localStorage.setItem(ADMIN_PASSWORD_STORAGE_KEY, password);
+      } else {
+        window.localStorage.removeItem(ADMIN_PASSWORD_STORAGE_KEY);
+      }
+    } catch {
+      // Ignore storage write errors
+    }
     setAuthError("");
     setIsUnlocked(true);
-    setPassword("");
+    if (!rememberPassword) {
+      setPassword("");
+    }
   };
 
   if (!isUnlocked) {
@@ -162,8 +189,17 @@ export function AdminReservationCalendar() {
                 if (authError) setAuthError("");
               }}
               className="w-full rounded-lg border border-accent/30 bg-background px-4 py-2.5 text-foreground focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/50"
-              autoComplete="off"
+              autoComplete="current-password"
             />
+            <label className="flex items-center gap-2 text-sm text-foreground/80">
+              <input
+                type="checkbox"
+                checked={rememberPassword}
+                onChange={(e) => setRememberPassword(e.target.checked)}
+                className="h-4 w-4 rounded border-accent/40 bg-background"
+              />
+              Remember password on this device
+            </label>
             {authError && <p className="text-sm text-red-500">{authError}</p>}
             <button
               type="submit"
