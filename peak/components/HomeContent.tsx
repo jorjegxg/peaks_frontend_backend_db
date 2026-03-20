@@ -281,7 +281,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
               href={basePath ? "/en/contact" : "/contact"}
               className="rounded-lg border border-accent/50 px-3 py-2 text-sm text-accent"
             >
-              {basePath ? "Contact in Suceava" : "Contact in Suceava"}
+              {basePath ? "Contact Peak Suceava" : "Contact Peak Suceava"}
             </Link>
             <Link
               href="/internet-cafe-suceava"
