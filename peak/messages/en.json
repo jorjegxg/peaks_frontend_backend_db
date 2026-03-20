@@ -182,6 +182,7 @@
       "otpCodeRequired": "Verification code is required.",
       "otpInvalid": "Invalid or expired code.",
       "emailRequired": "Email is required to make a reservation.",
+      "userBanned": "Your phone number is banned and you cannot make reservations. Contact the administrator.",
       "reservationSaveFailed": "Reservation failed. Please try again.",
       "reservationDeleteFailed": "Failed to delete reservation. Please try again.",
       "reservationFetchFailed": "Failed to load reservations. Please refresh."

@@ -182,6 +182,7 @@
       "otpCodeRequired": "Codul de verificare este obligatoriu.",
       "otpInvalid": "Cod invalid sau expirat.",
       "emailRequired": "Emailul este obligatoriu pentru rezervare.",
+      "userBanned": "Numarul tau de telefon este blocat si nu poti face rezervari. Contacteaza administratorul.",
       "reservationSaveFailed": "Rezervarea a eșuat. Te rugăm să încerci din nou.",
       "reservationDeleteFailed": "Nu am putut șterge rezervarea. Te rugăm să încerci din nou.",
       "reservationFetchFailed": "Nu am putut încărca rezervările. Reîmprospătează pagina."

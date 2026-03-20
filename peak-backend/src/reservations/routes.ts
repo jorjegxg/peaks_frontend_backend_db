@@ -7,6 +7,7 @@ import {
   deleteReservationForUser,
   type Reservation,
 } from "./store";
+import { isPhoneBanned } from "../bans/store";
 
 const router = Router();
 const MAX_NAME_LENGTH = 15;
@@ -77,6 +78,12 @@ router.post("/", async (req: Request, res: Response) => {
   const emailFromProfile = profile.email?.trim() || "";
   if (!phone) {
     return res.status(400).json({ errorCode: "USER_PHONE_REQUIRED", error: "Phone number is required" });
+  }
+  if (await isPhoneBanned(phone)) {
+    return res.status(403).json({
+      errorCode: "USER_BANNED",
+      error: "This phone number is banned from making reservations",
+    });
   }
   if (!emailFromProfile) {
     return res.status(400).json({ errorCode: "USER_EMAIL_REQUIRED", error: "Email is required" });

@@ -4,6 +4,7 @@ import authRoutes from "./auth/routes";
 import otpRoutes from "./otp/routes";
 import reservationRoutes from "./reservations/routes";
 import userRoutes from "./users/routes";
+import bansRoutes from "./bans/routes";
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use(
       return cb(null, false);
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "x-admin-password"],
     credentials: true,
   }),
 );
@@ -33,6 +34,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/reservations", reservationRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/bans", bansRoutes);
 
 app.get("/", (_req: Request, res: Response) => {
   res.json({ message: "Hello from the backend!" });

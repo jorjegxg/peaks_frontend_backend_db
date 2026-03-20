@@ -270,6 +270,8 @@ export function ReservationContent({ t, basePath = "" }: Props) {
             return t.reservation.errors.otpInvalid;
           case "USER_EMAIL_REQUIRED":
             return t.reservation.errors.emailRequired;
+          case "USER_BANNED":
+            return t.reservation.errors.userBanned;
           case "RESERVATION_SAVE_FAILED":
             return t.reservation.errors.reservationSaveFailed;
           case "RESERVATION_DELETE_FAILED":
