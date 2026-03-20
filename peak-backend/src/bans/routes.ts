@@ -10,8 +10,9 @@ function isAdminAuthorized(req: Request): boolean {
   return !!headerPassword && headerPassword === ADMIN_PASSWORD;
 }
 
-function normalizePhone(phone: string): string {
-  return phone.replace(/\s/g, "").trim();
+function normalizePhone(phone: string | string[] | undefined): string {
+  const raw = Array.isArray(phone) ? phone[0] : phone;
+  return (raw ?? "").replace(/\s/g, "").trim();
 }
 
 router.get("/", async (req: Request, res: Response) => {
@@ -32,7 +33,7 @@ router.post("/", async (req: Request, res: Response) => {
     return res.status(401).json({ errorCode: "ADMIN_UNAUTHORIZED", error: "Unauthorized admin request" });
   }
   const { phone, reason } = req.body as { phone?: string; reason?: string };
-  const normalized = normalizePhone(phone ?? "");
+  const normalized = normalizePhone(phone);
   if (!normalized) {
     return res.status(400).json({ errorCode: "BAN_PHONE_REQUIRED", error: "Phone is required" });
   }
@@ -49,7 +50,7 @@ router.delete("/:phone", async (req: Request, res: Response) => {
   if (!isAdminAuthorized(req)) {
     return res.status(401).json({ errorCode: "ADMIN_UNAUTHORIZED", error: "Unauthorized admin request" });
   }
-  const normalized = normalizePhone(req.params.phone ?? "");
+  const normalized = normalizePhone(req.params.phone);
   if (!normalized) {
     return res.status(400).json({ errorCode: "BAN_PHONE_REQUIRED", error: "Phone is required" });
   }
