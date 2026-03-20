@@ -69,6 +69,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
             className="object-cover"
             priority
             sizes="100vw"
+            quality={58}
           />
           <div className="absolute inset-0 bg-linear-to-b from-background/40 via-background/70 to-background" />
           <div className="absolute inset-0 bg-grid-led opacity-50" />
@@ -105,6 +106,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   fill
                   className="object-cover transition"
                   sizes="(max-width: 640px) 100vw, 33vw"
+                  quality={62}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
                 <span className="absolute bottom-3 left-3 rounded-lg border border-accent/50 bg-background/80 px-3 py-1.5 text-sm font-semibold text-accent backdrop-blur led-border-subtle">
@@ -129,6 +131,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   fill
                   className="object-cover transition"
                   sizes="(max-width: 640px) 100vw, 33vw"
+                  quality={62}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
                 <span className="absolute bottom-3 left-3 rounded-lg border border-accent/50 bg-background/80 px-3 py-1.5 text-sm font-semibold text-accent backdrop-blur led-border-subtle">
@@ -154,6 +157,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   fill
                   className="object-cover transition"
                   sizes="(max-width: 640px) 100vw, 33vw"
+                  quality={62}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
                 <span className="absolute bottom-3 left-3 rounded-lg border border-accent/50 bg-background/80 px-3 py-1.5 text-sm font-semibold text-accent backdrop-blur led-border-subtle">
@@ -193,6 +197,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                           fill
                           className="object-cover transition"
                           sizes="(max-width: 640px) 50vw, 300px"
+                          quality={58}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-background to-transparent opacity-80" />
                         <span className="absolute bottom-2 left-2 font-semibold text-white drop-shadow-lg">
@@ -220,6 +225,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                           fill
                           className="object-cover transition"
                           sizes="(max-width: 640px) 50vw, 200px"
+                          quality={58}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-background to-transparent opacity-80" />
                         <span className="absolute bottom-2 left-2 text-sm font-semibold text-white drop-shadow-lg">
@@ -252,6 +258,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                quality={60}
               />
               <div className="absolute inset-0 rounded-xl led-border-subtle ring-inset ring-accent/20" />
             </div>

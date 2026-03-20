@@ -731,8 +731,8 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         alt="PS5"
                         fill
                         className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 50vw"
-                        quality={90}
+                        sizes="(max-width: 640px) 50vw, 50vw"
+                        quality={62}
                       />
                     </div>
                     <span className="font-semibold text-foreground">
@@ -757,8 +757,8 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         alt="PC"
                         fill
                         className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 50vw"
-                        quality={90}
+                        sizes="(max-width: 640px) 50vw, 50vw"
+                        quality={62}
                       />
                     </div>
                     <span className="font-semibold text-foreground">
