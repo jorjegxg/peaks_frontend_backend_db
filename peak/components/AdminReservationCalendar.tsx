@@ -24,6 +24,7 @@ type CalendarTableProps = {
   grid: Record<number, Record<number, Reservation | null>>;
   onBanPhone?: (phone: string) => void;
   isUpdatingBans?: boolean;
+  bannedPhonesSet?: Set<string>;
 };
 
 function CalendarTable({
@@ -32,6 +33,7 @@ function CalendarTable({
   grid,
   onBanPhone,
   isUpdatingBans,
+  bannedPhonesSet,
 }: CalendarTableProps) {
   const stations = useMemo(
     () => Array.from({ length: stationCount }, (_, i) => i + 1),
@@ -98,14 +100,20 @@ function CalendarTable({
                       </p>
                       <p className="break-all">Email: {reservation.email}</p>
                       {onBanPhone && (
-                        <button
-                          type="button"
-                          onClick={() => onBanPhone(reservation.phone)}
-                          disabled={isUpdatingBans}
-                          className="mt-2 rounded border border-red-500/60 px-2 py-1 text-red-400 hover:bg-red-500/10 disabled:opacity-60"
-                        >
-                          Ban phone
-                        </button>
+                        bannedPhonesSet?.has(reservation.phone) ? (
+                          <span className="mt-2 inline-block rounded border border-red-500/40 bg-red-500/10 px-2 py-1 text-red-300">
+                            Banned
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => onBanPhone(reservation.phone)}
+                            disabled={isUpdatingBans}
+                            className="mt-2 rounded border border-red-500/60 px-2 py-1 text-red-400 hover:bg-red-500/10 disabled:opacity-60"
+                          >
+                            Ban phone
+                          </button>
+                        )
                       )}
                     </div>
                   </td>
@@ -242,6 +250,11 @@ export function AdminReservationCalendar() {
     }
   };
 
+  const bannedPhonesSet = useMemo(
+    () => new Set(bannedPhones.map((item) => item.phone)),
+    [bannedPhones],
+  );
+
   if (!isUnlocked) {
     return (
       <main className="min-h-screen bg-grid-led bg-background px-4 py-10 sm:px-6">
@@ -344,6 +357,7 @@ export function AdminReservationCalendar() {
               grid={ps5}
               onBanPhone={(phone) => void onBanPhone(phone)}
               isUpdatingBans={isUpdatingBans}
+              bannedPhonesSet={bannedPhonesSet}
             />
             <CalendarTable
               title="PC"
@@ -351,6 +365,7 @@ export function AdminReservationCalendar() {
               grid={pc}
               onBanPhone={(phone) => void onBanPhone(phone)}
               isUpdatingBans={isUpdatingBans}
+              bannedPhonesSet={bannedPhonesSet}
             />
             <section className="rounded-xl border border-accent/30 bg-foreground/5 p-4">
               <h2 className="text-lg font-semibold text-accent">Banned phones</h2>
