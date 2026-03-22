@@ -26,7 +26,7 @@ const PS5_GAMES = [
   {
     id: "mortalKombat11",
     key: "mortalKombat11" as const,
-    image: `${GAMES}/mortal-kombat.jpg`,
+    image: `${GAMES}/mortal-kombat2.jpg`,
   },
   {
     id: "itTakesTwo",
@@ -166,7 +166,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-foreground">
-                  {t.games.steeringWheelTitle}
+                  {t.games.steeringWheelHeading}
                 </h3>
                 <p className="mt-2 text-foreground/80">
                   {t.games.steeringWheel}
@@ -305,7 +305,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
           </div>
         </div>
       </section>
-
     </main>
   );
 }
