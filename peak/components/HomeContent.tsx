@@ -185,21 +185,19 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   {t.games.pcGamesLabel}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
-                  {PC_GAMES.map((game, index) => (
+                  {PC_GAMES.map((game) => (
                     <div
                       key={game.id}
                       className="group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle"
                     >
-                      <div className="relative aspect-video min-h-[120px]">
+                      <div className="relative aspect-video">
                         <Image
                           src={game.image}
                           alt={t.games[game.key]}
                           fill
                           className="object-cover transition"
-                          sizes="(max-width: 640px) 50vw, min(560px, calc((min(100vw, 72rem) - 2rem) / 2))"
+                          sizes="(max-width: 640px) 50vw, 300px"
                           quality={58}
-                          priority={index < 2}
-                          fetchPriority={index < 2 ? "high" : "auto"}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-background to-transparent opacity-80" />
                         <span className="absolute bottom-2 left-2 font-semibold text-white drop-shadow-lg">

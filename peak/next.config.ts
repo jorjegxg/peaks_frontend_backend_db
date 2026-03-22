@@ -24,8 +24,6 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    // Must list every `quality` value used by next/image (Next.js 16+)
-    qualities: [58, 60, 62, 75],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
