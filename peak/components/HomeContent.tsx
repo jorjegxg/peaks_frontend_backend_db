@@ -82,6 +82,12 @@ export function HomeContent({ t, basePath = "" }: Props) {
           <p className="mt-6 max-w-xl text-lg text-white/90 sm:text-xl">
             {t.hero.subtitle}
           </p>
+          <Link
+            href={basePath ? "/en/reservation" : "/rezervare"}
+            className="mt-8 inline-flex min-h-11 items-center justify-center rounded-lg bg-accent px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:opacity-90 led-glow md:hidden"
+          >
+            {t.hero.reserveNow}
+          </Link>
         </div>
       </section>
 

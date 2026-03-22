@@ -9,7 +9,8 @@
   },
   "hero": {
     "welcome": "Welcome to",
-    "subtitle": "Your internet cafe in Suceava for PS5 and PC gaming. LED vibes, great gear."
+    "subtitle": "Your internet cafe in Suceava for PS5 and PC gaming. LED vibes, great gear.",
+    "reserveNow": "Reserve now"
   },
   "games": {
     "title": "Games",
