@@ -191,7 +191,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   {t.games.pcGamesLabel}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
-                  {PC_GAMES.map((game) => (
+                  {PC_GAMES.map((game, idx) => (
                     <div
                       key={game.id}
                       className="group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle"
@@ -204,6 +204,8 @@ export function HomeContent({ t, basePath = "" }: Props) {
                           className="object-cover transition"
                           sizes="(max-width: 640px) 50vw, 300px"
                           quality={58}
+                          priority={idx < 2}
+                          loading={idx < 2 ? "eager" : "lazy"}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-background to-transparent opacity-80" />
                         <span className="absolute bottom-2 left-2 font-semibold text-white drop-shadow-lg">
@@ -219,7 +221,7 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   {t.games.ps5GamesLabel}
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {PS5_GAMES.map((game) => (
+                  {PS5_GAMES.map((game, idx) => (
                     <div
                       key={game.id}
                       className="group relative overflow-hidden rounded-xl border border-accent/50 bg-foreground/5 transition hover:led-border-subtle"
@@ -232,6 +234,8 @@ export function HomeContent({ t, basePath = "" }: Props) {
                           className="object-cover transition"
                           sizes="(max-width: 640px) 50vw, 200px"
                           quality={58}
+                          priority={idx < 2}
+                          loading={idx < 2 ? "eager" : "lazy"}
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-background to-transparent opacity-80" />
                         <span className="absolute bottom-2 left-2 text-sm font-semibold text-white drop-shadow-lg">
