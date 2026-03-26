@@ -6,6 +6,7 @@ const verifyOtp = vi.fn();
 const getOtpTtlSeconds = vi.fn();
 const sendOtpSms = vi.fn();
 const isTwilioConfigured = vi.fn();
+const isPhoneAlreadyUsed = vi.fn();
 
 vi.mock("../src/otp/store", () => ({
   createOtp,
@@ -18,6 +19,10 @@ vi.mock("../src/otp/twilio", () => ({
   isTwilioConfigured,
 }));
 
+vi.mock("../src/users/store", () => ({
+  isPhoneAlreadyUsed,
+}));
+
 // Import app after mocks so routes use mocked deps
 const app = (await import("../src/app")).default;
 
@@ -25,6 +30,7 @@ describe("OTP routes", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     getOtpTtlSeconds.mockReturnValue(300);
+    isPhoneAlreadyUsed.mockResolvedValue(false);
   });
 
   describe("POST /api/otp/send", () => {
@@ -54,6 +60,16 @@ describe("OTP routes", () => {
         .set("Content-Type", "application/json");
       expect(res.status).toBe(503);
       expect(res.body.error).toBe("SMS service is not configured");
+    });
+
+    it("returns 409 when phone is already used", async () => {
+      isPhoneAlreadyUsed.mockResolvedValue(true);
+      const res = await request(app)
+        .post("/api/otp/send")
+        .send({ phone: "+15551234567" })
+        .set("Content-Type", "application/json");
+      expect(res.status).toBe(409);
+      expect(res.body.errorCode).toBe("PHONE_ALREADY_IN_USE");
     });
 
     it("returns 200 and OTP sent when Twilio is configured", async () => {

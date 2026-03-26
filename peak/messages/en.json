@@ -181,6 +181,7 @@
       "phoneInvalid": "Invalid phone number format.",
       "smsNotConfigured": "SMS verification is not configured. Please contact us.",
       "smsSendFailed": "Failed to send verification code. Please try again.",
+      "phoneAlreadyInUse": "This phone number is already linked to another account.",
       "otpCodeRequired": "Verification code is required.",
       "otpInvalid": "Invalid or expired code.",
       "emailRequired": "Email is required to make a reservation.",

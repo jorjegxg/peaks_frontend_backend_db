@@ -87,3 +87,13 @@ export async function setUserPhone(uid: string, phone: string): Promise<void> {
     [phone, now, uid]
   );
 }
+
+export async function isPhoneAlreadyUsed(phone: string): Promise<boolean> {
+  await ensureTable();
+  const pool = await getPool();
+  const [rows] = await pool.query<RowDataPacket[]>(
+    "SELECT firebase_uid FROM users WHERE phone = ? LIMIT 1",
+    [phone]
+  );
+  return rows.length > 0;
+}

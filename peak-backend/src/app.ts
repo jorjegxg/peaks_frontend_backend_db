@@ -11,6 +11,8 @@ const app = express();
 const allowedOrigins = [
   "https://peak-nu-nine.vercel.app",
   "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:3002",
   "https://peak-gaming.site",
   "https://www.peak-gaming.site",
   "https://unchivalrous-honoredly-abigail.ngrok-free.dev",

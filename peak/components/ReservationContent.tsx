@@ -260,6 +260,8 @@ export function ReservationContent({ t, basePath = "" }: Props) {
             return t.reservation.errors.phoneRequired;
           case "PHONE_INVALID_FORMAT":
             return t.reservation.errors.phoneInvalid;
+          case "PHONE_ALREADY_IN_USE":
+            return t.reservation.errors.phoneAlreadyInUse;
           case "SMS_NOT_CONFIGURED":
             return t.reservation.errors.smsNotConfigured;
           case "SMS_SEND_FAILED":

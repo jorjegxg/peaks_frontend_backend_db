@@ -181,6 +181,7 @@
       "phoneInvalid": "Format invalid pentru numărul de telefon.",
       "smsNotConfigured": "Verificarea prin SMS nu este configurată. Te rugăm să ne contactezi.",
       "smsSendFailed": "Nu am putut trimite codul. Te rugăm să încerci din nou.",
+      "phoneAlreadyInUse": "Acest număr de telefon este deja asociat altui cont.",
       "otpCodeRequired": "Codul de verificare este obligatoriu.",
       "otpInvalid": "Cod invalid sau expirat.",
       "emailRequired": "Emailul este obligatoriu pentru rezervare.",

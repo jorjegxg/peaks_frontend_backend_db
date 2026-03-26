@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import type { SendOtpBody, VerifyOtpBody } from "./types";
 import { createOtp, verifyOtp, getOtpTtlSeconds } from "./store";
 import { sendOtpSms, isTwilioConfigured } from "./twilio";
+import { isPhoneAlreadyUsed } from "../users/store";
 
 const router = Router();
 
@@ -50,13 +51,21 @@ router.post("/send", async (req: Request, res: Response) => {
   if (!isValidPhone(normalized)) {
     return res.status(400).json({ errorCode: "PHONE_INVALID_FORMAT", error: "Invalid phone number format" });
   }
+  const e164 = toE164(normalized);
+  const used = await isPhoneAlreadyUsed(e164);
+  if (used) {
+    return res.status(409).json({
+      errorCode: "PHONE_ALREADY_IN_USE",
+      error: "Phone number is already used by another account",
+    });
+  }
   if (!isTwilioConfigured()) {
     return res.status(503).json({ errorCode: "SMS_NOT_CONFIGURED", error: "SMS service is not configured" });
   }
 
-  const code = await createOtp(normalized);
+  const code = await createOtp(e164);
   const ttlSeconds = getOtpTtlSeconds();
-  const to = toE164(normalized);
+  const to = e164;
 
   try {
     console.log("Sending OTP to", to, "with code", code);
