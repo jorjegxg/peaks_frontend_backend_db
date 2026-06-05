@@ -71,10 +71,13 @@
   "pricesPage": {
     "title": "Prețuri",
     "subtitle": "Tarife gaming. Program 12:00 – 24:00.",
-    "gamingRates": "Tarife gaming (pentru 2 persoane)",
+    "pcPrices": "Prețuri PC",
+    "currency": "RON",
+    "gamingRates": "Prețuri PS5 (pentru 2 persoane)",
     "classic": "Clasic",
     "pupilStudent": "Elev / Student",
-    "specialOffer": "Ofertă specială (12:00 – 16:00)",
+    "specialOffer": "Ofertă specială PS5",
+    "specialOfferHours": "12:00 – 16:00",
     "hour": "oră",
     "hours": "ore",
     "perHour": "lei/oră",
@@ -87,7 +90,7 @@
     "pupil3h": "3 ore – 60 lei (20 lei/oră)",
     "pupil5h": "5 ore – 90 lei (18 lei/oră)",
     "specialPC": "PC – 12 lei/oră",
-    "specialPS": "PS – 20 lei/oră",
+    "specialPS": "PS5 – 20 lei/oră",
     "back": "Înapoi"
   },
   "about": {

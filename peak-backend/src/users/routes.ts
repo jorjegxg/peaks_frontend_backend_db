@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import jwt from "jsonwebtoken";
 import { verifySessionToken, isAuthConfigured } from "../auth/google";
 import { getOrCreateUser, setUserPhone } from "./store";
 import { verifyOtp } from "../otp/store";
@@ -31,6 +32,9 @@ router.get("/me", async (req: Request, res: Response) => {
     const profile = await getOrCreateUser(sub, email ?? null, name ?? null);
     res.json({ ...profile, uid: sub });
   } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ errorCode: "AUTH_TOKEN_EXPIRED", error: "Session expired" });
+    }
     console.error("[users] GET /me failed:", err);
     return res.status(401).json({ errorCode: "AUTH_INVALID_TOKEN", error: "Invalid or expired token" });
   }
@@ -71,6 +75,9 @@ router.post("/me/phone", async (req: Request, res: Response) => {
     await setUserPhone(sub, e164);
     res.json({ success: true, message: "Phone verified and linked" });
   } catch (err) {
+    if (err instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({ errorCode: "AUTH_TOKEN_EXPIRED", error: "Session expired" });
+    }
     console.error("[users] POST /me/phone failed:", err);
     return res.status(401).json({ errorCode: "AUTH_INVALID_TOKEN", error: "Invalid or expired token" });
   }

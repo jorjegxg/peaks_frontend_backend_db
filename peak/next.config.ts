@@ -10,6 +10,9 @@ if (fs.existsSync(envPath)) {
 }
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
   async headers() {
     return [
       {
@@ -24,6 +27,7 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    qualities: [58, 60, 62, 75],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
