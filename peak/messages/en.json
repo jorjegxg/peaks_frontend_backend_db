@@ -71,10 +71,13 @@
   "pricesPage": {
     "title": "Prices",
     "subtitle": "Gaming rates. Open 12:00 – 24:00.",
-    "gamingRates": "Gaming rates (for 2 people)",
+    "pcPrices": "PC Prices",
+    "currency": "RON",
+    "gamingRates": "PS5 prices (for 2 people)",
     "classic": "Classic",
     "pupilStudent": "Pupil / Student",
-    "specialOffer": "Special offer (12:00 – 16:00)",
+    "specialOffer": "PS5 special offer",
+    "specialOfferHours": "12:00 – 16:00",
     "hour": "hour",
     "hours": "hours",
     "perHour": "lei/hour",
@@ -87,7 +90,7 @@
     "pupil3h": "3 hours – 60 lei (20 lei/hour)",
     "pupil5h": "5 hours – 90 lei (18 lei/hour)",
     "specialPC": "PC – 12 lei/hour",
-    "specialPS": "PS – 20 lei/hour",
+    "specialPS": "PS5 – 20 lei/hour",
     "back": "Back"
   },
   "about": {
