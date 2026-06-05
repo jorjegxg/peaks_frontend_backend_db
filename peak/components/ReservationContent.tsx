@@ -736,7 +736,6 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         fill
                         className="object-cover"
                         sizes="(max-width: 640px) 50vw, 50vw"
-                        quality={62}
                       />
                     </div>
                     <span className="font-semibold text-foreground">
@@ -762,7 +761,6 @@ export function ReservationContent({ t, basePath = "" }: Props) {
                         fill
                         className="object-cover"
                         sizes="(max-width: 640px) 50vw, 50vw"
-                        quality={62}
                       />
                     </div>
                     <span className="font-semibold text-foreground">

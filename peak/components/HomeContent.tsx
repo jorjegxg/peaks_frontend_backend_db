@@ -8,49 +8,48 @@ const PC_IMAGE = "/2pc.jpg";
 const CAFE_IMAGE = "/warzone.jpg";
 const STEERING_WHEEL_IMAGE = "/steering.jpg";
 
-// Game images from public/games – only games that have files in this folder
-const GAMES = "";
+// Game images live in public/ root (not public/games/)
 const PC_GAMES = [
-  { id: "csgo", key: "csgo" as const, image: `${GAMES}/2cs2.jpg` },
-  { id: "valorant", key: "valorant" as const, image: `${GAMES}/valorant.png` },
-  { id: "fortnite", key: "fortnite" as const, image: `${GAMES}/2fortnite.jpg` },
+  { id: "csgo", key: "csgo" as const, image: "/2cs2.jpg" },
+  { id: "valorant", key: "valorant" as const, image: "/valorant.png" },
+  { id: "fortnite", key: "fortnite" as const, image: "/2fortnite.jpg" },
   {
     id: "roblox",
     key: "roblox" as const,
-    image: `${GAMES}/roblox-pictures.jpg`,
+    image: "/roblox-pictures.jpg",
   },
 ] as const;
 const PS5_GAMES = [
-  { id: "fc26", key: "fc26" as const, image: `${GAMES}/fc.avif` },
-  { id: "ufc5", key: "ufc5" as const, image: `${GAMES}/ufc.avif` },
+  { id: "fc26", key: "fc26" as const, image: "/fc.avif" },
+  { id: "ufc5", key: "ufc5" as const, image: "/ufc.avif" },
   {
     id: "mortalKombat11",
     key: "mortalKombat11" as const,
-    image: `${GAMES}/mortal-kombat2.jpg`,
+    image: "/mortal-kombat2.jpg",
   },
   {
     id: "itTakesTwo",
     key: "itTakesTwo" as const,
-    image: `${GAMES}/it_takes_two.jpg`,
+    image: "/it_takes_two.jpg",
   },
-  { id: "forza", key: "forza" as const, image: `${GAMES}/forza.jpg` },
-  { id: "wwe", key: "wwe" as const, image: `${GAMES}/wwe.jpg` },
-  { id: "nba2k25", key: "nba2k25" as const, image: `${GAMES}/2k25.jpg` },
-  { id: "roblox", key: "roblox" as const, image: `${GAMES}/roblox.png` },
-  { id: "fortnite", key: "fortnite" as const, image: `${GAMES}/fortnite.jpg` },
+  { id: "forza", key: "forza" as const, image: "/forza.jpg" },
+  { id: "wwe", key: "wwe" as const, image: "/wwe.jpg" },
+  { id: "nba2k25", key: "nba2k25" as const, image: "/2k25.jpg" },
+  { id: "roblox", key: "roblox" as const, image: "/roblox.png" },
+  { id: "fortnite", key: "fortnite" as const, image: "/fortnite.jpg" },
   {
     id: "assettoCorsa",
     key: "assettoCorsa" as const,
-    image: `${GAMES}/assetto_corsa_competizione.jpg`,
+    image: "/assetto_corsa_competizione.jpg",
   },
   {
     id: "needForSpeedHeat",
     key: "needForSpeedHeat" as const,
-    image: `${GAMES}/need_for_speed_heat.jpg`,
+    image: "/need_for_speed_heat.jpg",
   },
-  { id: "aWayOut", key: "aWayOut" as const, image: `${GAMES}/a_way_out.jpg` },
-  { id: "dirt5", key: "dirt5" as const, image: `${GAMES}/dirt5.jpg` },
-  { id: "wrc", key: "wrc" as const, image: `${GAMES}/w2c.jpg` },
+  { id: "aWayOut", key: "aWayOut" as const, image: "/a_way_out.jpg" },
+  { id: "dirt5", key: "dirt5" as const, image: "/dirt5.jpg" },
+  { id: "wrc", key: "wrc" as const, image: "/w2c.jpg" },
 ] as const;
 
 type Props = { t: Translations; basePath?: string };
@@ -69,7 +68,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
             className="object-cover"
             priority
             sizes="100vw"
-            quality={58}
           />
           <div className="absolute inset-0 bg-linear-to-b from-background/40 via-background/70 to-background" />
           <div className="absolute inset-0 bg-grid-led opacity-50" />
@@ -112,7 +110,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   fill
                   className="object-cover transition"
                   sizes="(max-width: 640px) 100vw, 33vw"
-                  quality={62}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
                 <span className="absolute bottom-3 left-3 rounded-lg border border-accent/50 bg-background/80 px-3 py-1.5 text-sm font-semibold text-accent backdrop-blur led-border-subtle">
@@ -137,7 +134,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   fill
                   className="object-cover transition"
                   sizes="(max-width: 640px) 100vw, 33vw"
-                  quality={62}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
                 <span className="absolute bottom-3 left-3 rounded-lg border border-accent/50 bg-background/80 px-3 py-1.5 text-sm font-semibold text-accent backdrop-blur led-border-subtle">
@@ -163,7 +159,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
                   fill
                   className="object-cover transition"
                   sizes="(max-width: 640px) 100vw, 33vw"
-                  quality={62}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-background via-transparent to-transparent" />
                 <span className="absolute bottom-3 left-3 rounded-lg border border-accent/50 bg-background/80 px-3 py-1.5 text-sm font-semibold text-accent backdrop-blur led-border-subtle">
@@ -203,7 +198,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
                           fill
                           className="object-cover transition"
                           sizes="(max-width: 640px) 50vw, 300px"
-                          quality={58}
                           priority={idx < 2}
                           loading={idx < 2 ? "eager" : "lazy"}
                         />
@@ -233,7 +227,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
                           fill
                           className="object-cover transition"
                           sizes="(max-width: 640px) 50vw, 200px"
-                          quality={58}
                           priority={idx < 2}
                           loading={idx < 2 ? "eager" : "lazy"}
                         />
@@ -268,7 +261,6 @@ export function HomeContent({ t, basePath = "" }: Props) {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                quality={60}
               />
               <div className="absolute inset-0 rounded-xl led-border-subtle ring-inset ring-accent/20" />
             </div>
